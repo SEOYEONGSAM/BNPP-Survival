@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BNPP Survival">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d1f3c">
+<title>BNPP Survival</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f6fa;
+  --white: #ffffff;
+  --navy: #0d1f3c;
+  --navy2: #1a3258;
+  --red: #d0021b;
+  --red-light: #fff0f2;
+  --red-mid: #ffd6db;
+  --amber: #e67e00;
+  --amber-light: #fff8ee;
+  --green: #1a7a4a;
+  --green-light: #edfbf3;
+  --blue: #1d5fa8;
+  --blue-light: #eef4ff;
+  --purple: #6b3fa0;
+  --purple-light: #f5eeff;
+  --text: #0d1f3c;
+  --text-mid: #3d5278;
+  --text-muted: #8a9bbf;
+  --border: #dde3ef;
+  --border-strong: #c2cce0;
+  --shadow: 0 2px 12px rgba(13,31,60,0.08);
+  --shadow-md: 0 4px 20px rgba(13,31,60,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ── LANG TOGGLE ── */
+.lang-bar {
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: var(--navy);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 16px;
+  z-index: 200;
+  gap: 6px;
+}
+
+.lang-btn {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+
+.lang-btn.active {
+  background: var(--white);
+  color: var(--navy);
+  border-color: var(--white);
+}
+
+/* ── HOME ── */
+#home { padding-top: 36px; }
+
+.home-hero {
+  background: var(--navy);
+  padding: 28px 20px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero::after {
+  content: '+';
+  position: absolute;
+  right: -10px; top: -20px;
+  font-size: 180px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.03);
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+}
+
+.hero-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.hero-title span { color: #ff6b7a; }
+
+.hero-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 8px;
+}
+
+.hero-stat {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 10px 14px;
+  flex: 1;
+  text-align: center;
+}
+
+.hero-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.hero-stat-label {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-body { padding: 16px 16px 100px; }
+
+.section-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  margin-top: 20px;
+  padding-left: 2px;
+}
+
+/* Emergency */
+.emergency-card {
+  background: var(--red);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(208,2,27,0.3);
+  margin-bottom: 4px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.emergency-card:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(208,2,27,0.3); }
+
+.emergency-icon-wrap {
+  width: 46px; height: 46px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.emergency-label-text { font-size: 11px; color: rgba(255,255,255,0.75); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
+.emergency-num { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: white; }
+.emergency-arrow { margin-left: auto; color: rgba(255,255,255,0.5); font-size: 22px; }
+.emergency-wrap { margin-bottom: 4px; }
+.emergency-steps { background: #fff0f2; border: 1.5px solid #ffd6db; border-top: none; border-radius: 0 0 14px 14px; padding: 12px 18px; display: flex; flex-direction: column; gap: 6px; }
+.emergency-step { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #d0021b; }
+.emergency-step-num { width: 22px; height: 22px; border-radius: 50%; background: #d0021b; color: white; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* Mission */
+.mission-card {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.mission-card:active { transform: scale(0.98); }
+.mission-card:hover { box-shadow: var(--shadow-md); }
+
+.mission-top-bar {
+  background: var(--navy);
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mission-week-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+.mission-num-badge { font-size: 11px; font-weight: 700; color: white; background: var(--red); border-radius: 20px; padding: 2px 10px; }
+
+.mission-body { padding: 16px; }
+
+.mission-emoji-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.mission-emoji-big { font-size: 28px; }
+
+.mission-title-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.mission-desc { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 14px; }
+
+.start-mission-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.card-thumb {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card-thumb:active { transform: scale(0.97); }
+.card-thumb:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+
+.card-thumb-emoji { font-size: 22px; margin-bottom: 6px; }
+.card-thumb-num { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+.card-thumb-title { font-size: 12px; font-weight: 700; line-height: 1.35; color: var(--navy); }
+
+.card-thumb-tag {
+  display: inline-block;
+  font-size: 9px;
+  margin-top: 7px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tag-home { background: var(--blue-light); color: var(--blue); }
+.tag-drive { background: var(--amber-light); color: var(--amber); }
+
+.view-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: var(--white);
+  border-top: 1.5px solid var(--border);
+  display: flex;
+  z-index: 100;
+  box-shadow: 0 -4px 16px rgba(13,31,60,0.08);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 14px;
+  cursor: pointer;
+  gap: 3px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  border: none;
+  background: none;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+.nav-item svg { width: 20px; height: 20px; }
+.nav-item.active { color: var(--red); }
+
+/* ── QUIZ ── */
+#quiz { padding-top: 36px; background: var(--bg); }
+
+.quiz-header {
+  background: var(--white);
+  padding: 16px 16px 20px;
+  border-bottom: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.quiz-back {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-mid); cursor: pointer;
+  background: none; border: none;
+  margin-bottom: 14px;
+}
+
+.quiz-back svg { width: 16px; height: 16px; }
+
+.progress-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--red);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.quiz-scenario-box {
+  background: var(--amber-light);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.quiz-q-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.35;
+}
+
+.quiz-body { padding: 16px 16px 100px; }
+
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+
+.quiz-option {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s, transform 0.1s;
+}
+
+.quiz-option:active { transform: scale(0.98); }
+.quiz-option:hover:not(.disabled) { border-color: var(--border-strong); }
+
+.option-letter {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.quiz-option.correct { border-color: var(--green); background: var(--green-light); }
+.quiz-option.correct .option-letter { background: var(--green); border-color: var(--green); color: white; }
+.quiz-option.wrong { border-color: var(--red); background: var(--red-light); }
+.quiz-option.wrong .option-letter { background: var(--red); border-color: var(--red); color: white; }
+.quiz-option.disabled { pointer-events: none; opacity: 0.45; }
+
+.feedback-box {
+  margin-top: 14px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: none;
+  box-shadow: var(--shadow);
+}
+
+.feedback-box.show { display: block; }
+.feedback-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.feedback-text { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 14px; }
+
+.fb-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.fb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 8px; padding: 9px 14px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+
+.fb-btn-outline { background: none; border: 1.5px solid var(--border); color: var(--text-mid); }
+.fb-btn-primary { background: var(--navy); border: none; color: white; }
+
+/* Result */
+.quiz-result {
+  display: none; flex-direction: column;
+  align-items: center; padding: 48px 24px;
+  text-align: center;
+}
+
+.quiz-result.show { display: flex; }
+
+.result-circle {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 3px solid var(--border);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.result-score { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; }
+.result-score-label { font-size: 10px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.08em; }
+.result-message { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 28px; line-height: 1.4; }
+
+.result-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; }
+
+.result-btn {
+  padding: 14px; border-radius: 12px; border: none;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+}
+
+.result-btn.primary { background: var(--red); color: white; }
+.result-btn.secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+
+/* ── CARDS LIST ── */
+#cards { padding-top: 36px; background: var(--bg); }
+
+.cards-header {
+  background: var(--white);
+  padding: 16px 16px 14px;
+  border-bottom: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.cards-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px; font-weight: 700; color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.tab-row { display: flex; gap: 8px; }
+
+.tab {
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: none;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.tab.active { background: var(--navy); border-color: var(--navy); color: white; }
+
+.cards-list { padding: 14px 16px 100px; display: flex; flex-direction: column; gap: 8px; }
+
+.card-row {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card-row:active { transform: scale(0.98); }
+.card-row:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+
+.card-row-emoji { font-size: 24px; flex-shrink: 0; }
+.card-row-info { flex: 1; }
+.card-row-num { font-size: 10px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.card-row-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-top: 1px; }
+.card-row-arrow { color: var(--text-muted); font-size: 20px; font-weight: 300; }
+
+/* ── CARD DETAIL ── */
+#card-detail { padding-top: 36px; background: var(--bg); }
+
+.detail-header {
+  background: var(--navy);
+  padding: 16px 16px 24px;
+}
+
+.detail-back {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer; background: none; border: none;
+  margin-bottom: 20px;
+}
+
+.detail-back svg { width: 16px; height: 16px; }
+
+.detail-header-inner { display: flex; align-items: flex-start; gap: 14px; }
+
+.detail-emoji-box {
+  width: 60px; height: 60px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  flex-shrink: 0;
+}
+
+.detail-num { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
+.detail-title { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: white; line-height: 1.25; }
+
+.detail-body { padding: 16px 16px 100px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Detail sections */
+.ds {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.ds-header {
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.ds-icon { font-size: 16px; }
+
+.ds-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+
+.ds-body { padding: 14px 16px; }
+
+/* Scenario */
+.ds-scenario .ds-header { background: var(--amber-light); border-bottom-color: #ffddb0; }
+.ds-scenario .ds-label { color: var(--amber); }
+.ds-scenario .ds-body { font-size: 13px; line-height: 1.7; color: var(--text-mid); }
+
+/* Check */
+.ds-check .ds-header { background: var(--blue-light); border-bottom-color: #c5d9f5; }
+.ds-check .ds-label { color: var(--blue); }
+
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; line-height: 1.5; color: var(--text-mid);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.check-item:last-child { border-bottom: none; }
+
+.check-icon {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--blue-light);
+  border: 1.5px solid #c5d9f5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  color: var(--blue);
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+/* Action */
+.ds-action .ds-header { background: var(--green-light); border-bottom-color: #b6e8cf; }
+.ds-action .ds-label { color: var(--green); }
+
+.action-step {
+  display: flex; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px; line-height: 1.5; color: var(--text);
+}
+
+.action-step:last-child { border-bottom: none; }
+
+.step-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Red Flag */
+.ds-redflag { border-color: var(--red-mid); }
+.ds-redflag .ds-header { background: var(--red); border-bottom-color: #b00018; }
+.ds-redflag .ds-label { color: white; }
+.ds-redflag .ds-icon { color: white; }
+.ds-redflag .ds-body { background: var(--red-light); }
+
+.rf-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--red-mid);
+  font-size: 13px; font-weight: 600;
+  color: var(--red);
+  line-height: 1.4;
+}
+
+.rf-item:last-child { border-bottom: none; }
+
+.rf-bullet {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* Call strip */
+.call-strip {
+  background: var(--red);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(208,2,27,0.3);
+  transition: transform 0.15s;
+}
+
+.call-strip:active { transform: scale(0.98); }
+.call-label-text { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+.call-number { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: white; }
+.call-icon-big { font-size: 32px; }
+
+/* Time matters */
+.time-matters-box {
+  background: var(--amber-light);
+  border: 1.5px solid #ffddb0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px; color: var(--amber);
+  font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Did you know */
+.ds-did .ds-header { background: var(--purple-light); border-bottom-color: #d4b8f5; }
+.ds-did .ds-label { color: var(--purple); }
+.ds-did .ds-body { font-size: 13px; line-height: 1.7; color: var(--text-mid); }
+
+/* Share btn */
+.share-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: var(--navy);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  letter-spacing: 0.02em;
+}
+
+/* Disclaimer */
+.disclaimer {
+  background: var(--bg);
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 11px; color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── SHARE MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(13,31,60,0.6);
+  z-index: 300;
+  display: none; align-items: flex-end;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-sheet {
+  background: var(--white);
+  border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 430px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.modal-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+
+/* Share card preview */
+#share-card-preview {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.sc-header {
+  background: var(--navy);
+  padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.sc-brand { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+.sc-num { font-size: 12px; font-weight: 700; color: white; background: var(--red); border-radius: 20px; padding: 2px 10px; }
+
+.sc-hero {
+  padding: 16px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.sc-emoji { font-size: 36px; }
+.sc-title-text { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); }
+
+.sc-section { padding: 12px 16px; border-bottom: 1.5px solid var(--border); }
+.sc-section:last-child { border-bottom: none; }
+
+.sc-section-label {
+  font-size: 9px; font-weight: 800;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.sc-action-item {
+  display: flex; gap: 8px;
+  font-size: 12px; line-height: 1.5; color: var(--text);
+  margin-bottom: 5px;
+}
+
+.sc-action-item:last-child { margin-bottom: 0; }
+
+.sc-step-num {
+  width: 18px; height: 18px;
+  border-radius: 50%; background: var(--green);
+  color: white; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+
+.sc-rf-item {
+  display: flex; gap: 8px; align-items: flex-start;
+  font-size: 12px; font-weight: 600; color: var(--red);
+  margin-bottom: 4px;
+}
+
+.sc-rf-item:last-child { margin-bottom: 0; }
+.sc-rf-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 4px; }
+
+.sc-redflag-bg { background: var(--red-light); }
+.sc-redflag-label { color: var(--red); }
+
+.sc-call {
+  background: var(--red);
+  padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.sc-call-label { font-size: 10px; color: rgba(255,255,255,0.7); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.sc-call-num { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: white; }
+
+.sc-footer {
+  padding: 10px 16px;
+  background: var(--bg);
+  font-size: 10px; color: var(--text-muted);
+  text-align: center;
+}
+
+.modal-actions { display: flex; gap: 10px; }
+.modal-btn {
+  flex: 1; padding: 14px; border-radius: 12px;
+  font-size: 14px; font-weight: 700; cursor: pointer; border: none;
+}
+
+.modal-btn-primary { background: var(--navy); color: white; }
+.modal-btn-secondary { background: var(--bg); color: var(--navy); border: 1.5px solid var(--border); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--navy);
+  border-radius: 10px; padding: 10px 20px;
+  font-size: 13px; font-weight: 600; color: white;
+  opacity: 0; transition: all 0.3s;
+  pointer-events: none; z-index: 400;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Scenario img placeholder */
+.scenario-img {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #eef4ff 0%, #fff8ee 100%);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  font-size: 48px;
+  border: 1.5px dashed var(--border);
+  color: var(--text-muted);
+  position: relative;
+}
+
+.img-placeholder-label {
+  position: absolute; bottom: 8px;
+  font-size: 10px; color: var(--text-muted);
+  font-weight: 600; letter-spacing: 0.06em;
+}
+</style>
+</head>
+<body>
+
+<!-- Lang Bar -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('ko', this)">🇰🇷 KO</button>
+  <button class="lang-btn" onclick="setLang('en', this)">🇺🇸 EN</button>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home">
+  <div class="home-hero">
+  <!-- Barakah dome silhouette -->
+  <svg style="position:absolute;right:-32px;bottom:-4px;opacity:0.075;pointer-events:none" width="280" height="150" viewBox="0 0 420 210" fill="white" aria-hidden="true">
+    <rect x="6" y="178" width="408" height="8" rx="4"/>
+    <rect x="38" y="150" width="344" height="30" rx="3"/>
+    <rect x="62" y="128" width="54" height="28" rx="3"/>
+    <rect x="142" y="128" width="54" height="28" rx="3"/>
+    <rect x="224" y="128" width="54" height="28" rx="3"/>
+    <rect x="304" y="128" width="54" height="28" rx="3"/>
+    <path d="M50 128 C56 86 82 60 116 60 C150 60 176 86 182 128 Z"/>
+    <path d="M130 128 C136 86 162 60 196 60 C230 60 256 86 262 128 Z"/>
+    <path d="M212 128 C218 86 244 60 278 60 C312 60 338 86 344 128 Z"/>
+    <path d="M292 128 C298 86 324 60 358 60 C392 60 418 86 424 128 Z"/>
+    <rect x="24" y="164" width="372" height="8" rx="4"/>
+    <line x1="12" y1="194" x2="394" y2="194" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+    <div class="hero-badge"><span class="hero-badge-dot"></span> BNPP · Team Korea</div>
+    <div class="hero-title" data-i18n="heroTitle">혼자 있을 때,<br><span>당신을 지켜줄</span> 60초</div>
+    <div class="hero-sub" data-i18n="heroSub">해외 근무 중 발생하는 응급상황 — 당황하지 않고 첫 60초를 버티는 법</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num" id="cards-count">35</div><div class="hero-stat-label" data-i18n="cards">Cards</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label" data-i18n="parts">Parts</div></div>
+    </div>
+  </div>
+
+  <div class="home-body">
+    <div class="section-eyebrow" data-i18n="emergency">긴급 연락</div>
+    <div class="emergency-wrap">
+    <div class="emergency-card" onclick="callEmergency()">
+      <div class="emergency-icon-wrap">📞</div>
+      <div>
+        <div class="emergency-label-text">BNPP Emergency</div>
+        <div class="emergency-num">800-7999</div>
+      </div>
+      <div class="emergency-arrow">›</div>
+    </div>
+    <div class="emergency-steps">
+      <div class="emergency-step">
+        <div class="emergency-step-num">1</div>
+        <div data-i18n="emergencyStep1">이름 · 위치 · 증상 말하기</div>
+      </div>
+      <div class="emergency-step">
+        <div class="emergency-step-num">2</div>
+        <div data-i18n="emergencyStep2">문 잠금 해제하기</div>
+      </div>
+    </div>
+  </div>
+
+    <div class="section-eyebrow" data-i18n="eyebrowMission">이번 주 미션</div>
+    <div class="mission-card">
+      <div class="mission-top-bar">
+        <div class="mission-week-label" data-i18n="week1">Quick Mission</div>
+        <div class="mission-num-badge" id="mission-num">#001</div>
+      </div>
+      <div class="mission-body">
+        <div class="mission-emoji-title">
+          <div class="mission-emoji-big" id="mission-emoji">🍅</div>
+          <div class="mission-title-text" id="mission-title">목에 뭔가 걸렸다</div>
+        </div>
+        <div class="mission-desc" id="mission-desc">혼자 숙소에서 과일을 먹다 갑자기 숨이 막혔습니다. 당신의 첫 번째 행동은?</div>
+        <button class="start-mission-btn" id="mission-btn" onclick="goCard(0)">
+          ▶ <span data-i18n="startMission">카드 보기</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-eyebrow" data-i18n="recentCards">추천 카드</div>
+    <div class="card-grid">
+      <div class="card-thumb" onclick="goCard(0)">
+        <div class="card-thumb-emoji">🍅</div>
+        <div class="card-thumb-num">#001 · BNPP</div>
+        <div class="card-thumb-title" data-i18n="card001Title2">음식이 목에 걸렸을 때</div>
+        <span class="card-thumb-tag tag-home">BNPP</span>
+      </div>
+      <div class="card-thumb" onclick="goCard(1)">
+        <div class="card-thumb-emoji">😴</div>
+        <div class="card-thumb-num">#002 · BNPP</div>
+        <div class="card-thumb-title" data-i18n="card002Title">자다가 숨이 막혀 깼을 때</div>
+        <span class="card-thumb-tag tag-home">BNPP</span>
+      </div>
+      <div class="card-thumb" onclick="goCardById('007')">
+        <div class="card-thumb-emoji">💔</div>
+        <div class="card-thumb-num">#006 · BNPP</div>
+        <div class="card-thumb-title" data-i18n="card007Title">갑작스러운 흉통</div>
+        <span class="card-thumb-tag tag-home">BNPP</span>
+      </div>
+      <div class="card-thumb" onclick="goCardById('021')">
+        <div class="card-thumb-emoji">🚗</div>
+        <div class="card-thumb-num">#017 · OUTSIDE</div>
+        <div class="card-thumb-title" data-i18n="card021Title">운전 중 흉통</div>
+        <span class="card-thumb-tag tag-drive">Outside</span>
+      </div>
+    </div>
+    <button class="view-all-btn" onclick="goScreen('cards')"><span data-i18n="viewAll">전체 카드 보기</span> →</button>
+  </div>
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <button class="quiz-back" onclick="goScreen('home')">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10 3L4 8l6 5V3z"/></svg>
+      <span data-i18n="back">돌아가기</span>
+    </button>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="quiz-scenario-box" id="quiz-scenario"></div>
+    <div class="quiz-q-text" id="quiz-question"></div>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-options" id="quiz-options"></div>
+    <div class="feedback-box" id="feedback-box">
+      <div class="feedback-title" id="feedback-title"></div>
+      <div class="feedback-text" id="feedback-text"></div>
+      <div class="fb-actions">
+        <button class="fb-btn fb-btn-outline" onclick="goCard(currentQuizCard)">📋 <span data-i18n="viewCard">카드 보기</span></button>
+        <button class="fb-btn fb-btn-primary" id="next-btn" onclick="nextQuestion()"><span data-i18n="next">다음</span> →</button>
+      </div>
+    </div>
+    <div class="quiz-result" id="quiz-result">
+      <div class="result-circle">
+        <div class="result-score" id="result-score"></div>
+        <div class="result-score-label" data-i18n="correct">정답</div>
+      </div>
+      <div class="result-message" id="result-message"></div>
+      <div class="result-actions">
+        <button class="result-btn primary" onclick="restartQuiz()" data-i18n="retry">다시 풀기</button>
+        <button class="result-btn secondary" onclick="goCard(currentQuizCard)" data-i18n="viewCard">카드 보기</button>
+        <button class="result-btn secondary" onclick="goScreen('home')" data-i18n="goHome">홈으로</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CARDS ══ -->
+<div class="screen" id="cards">
+  <div class="cards-header">
+    <div class="cards-title" data-i18n="survivalCards">Survival Cards</div>
+    <div class="tab-row">
+      <button class="tab active" id="tab-all" onclick="filterCards('all',this)" data-i18n="all">전체 35</button>
+      <button class="tab" id="tab-home" onclick="filterCards('home',this)">🏠 BNPP 20</button>
+      <button class="tab" id="tab-drive" onclick="filterCards('drive',this)">🚗 Outside 15</button>
+    </div>
+  </div>
+  <div class="cards-list" id="cards-list"></div>
+</div>
+
+<!-- ══ CARD DETAIL ══ -->
+<div class="screen" id="card-detail">
+  <div class="detail-header">
+    <button class="detail-back" id="detail-back">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10 3L4 8l6 5V3z"/></svg>
+      <span data-i18n="cardList">카드 목록</span>
+    </button>
+    <div class="detail-header-inner">
+      <div class="detail-emoji-box" id="detail-emoji"></div>
+      <div>
+        <div class="detail-num" id="detail-num"></div>
+        <div class="detail-title" id="detail-title"></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body" id="detail-body"></div>
+</div>
+
+<!-- ══ SHARE MODAL ══ -->
+<div class="modal-overlay" id="share-modal" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" data-i18n="shareCard">카드 공유하기</div>
+    <div id="share-card-preview"></div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="closeShareModal()" data-i18n="cancel">취소</button>
+      <button class="modal-btn modal-btn-primary" onclick="downloadCard()" data-i18n="saveShare">이미지 저장 · 공유</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="nav-item active" id="nav-home" onclick="goScreen('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span data-i18n="navHome">홈</span>
+  </button>
+  <button class="nav-item" id="nav-cards" onclick="goScreen('cards')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    <span data-i18n="navCards">카드</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ LANG ══
+const LANG = {
+  ko: {
+    heroTitle: '혼자 있을 때,<br><span>당신을 지켜줄</span> 60초',
+    heroSub: '해외 근무 중 발생하는 응급상황 — 당황하지 않고 첫 60초를 버티는 법',
+    statCards:'카드', statParts:'파트', statQuiz:'퀴즈당',
+    eyebrowEmergency:'긴급 연락', eyebrowMission:'이번 주 미션', eyebrowRecent:'최근 카드',
+    week1:'Quick Mission', missionTitle:'목에 뭔가 걸렸다',
+    missionDesc:'혼자 숙소에서 과일을 먹다 갑자기 숨이 막혔습니다. 당신의 첫 번째 행동은?',
+    startMission:'카드 보기',
+    emergencyStep1:'이름 · 위치 · 증상 말하기', emergencyStep2:'문 잠금 해제하기',
+    c001t:'음식이 목에 걸렸을 때', c002t:'자다가 숨이 막혀 깼을 때',
+    c007t:'갑작스러운 흉통', c021t:'운전 중 흉통',
+    viewAll:'전체 카드 보기', back:'돌아가기', viewCard:'카드 보기',
+    next:'다음', correct:'정답', retry:'다시 풀기',
+    viewCard001:'카드 #001 보기', goHome:'홈으로',
+    survivalCards:'Survival Cards', tabAll:'전체 28',
+    cardList:'카드 목록', shareTitle:'카드 공유하기',
+    cancel:'취소', saveShare:'이미지 저장 · 공유',
+    navHome:'홈', navQuiz:'퀴즈', navCards:'카드', navSOS:'SOS',
+    scenario:'시나리오', check:'체크', action:'초기 행동',
+    redflag:'RED FLAG — 즉시 전화', didyouknow:'Did You Know?',
+    shareBtn:'카드 공유하기', quizBtn:'퀴즈 풀기',
+    callConfirm:'BNPP 긴급번호 800-7999로 전화하시겠습니까?',
+    correctFb:'✅ 정답입니다!', wrongFb:'❌ 오답입니다',
+    score100:'완벽합니다!',
+    score70:'다시 도전하세요.',
+    score0:'다시 도전하세요.',
+    comingSoon:'준비 중인 카드입니다 🔜',
+    saving:'이미지 저장 중...', copied:'링크가 복사되었습니다 ✓',
+    cards:'카드', parts:'파트', perQuiz:'퀴즈당',
+    emergency:'긴급 연락', recentCards:'추천 카드',
+    card001Title:'목에 뭔가 걸렸다', card001Desc:'혼자 숙소에서 과일을 먹다 갑자기 숨이 막혔습니다. 당신의 첫 번째 행동은?',
+    card001Title2:'음식이 목에 걸렸을 때', card002Title:'자다가 숨이 막혀 깼을 때',
+    card007Title:'갑작스러운 흉통', card021Title:'운전 중 흉통',
+    disclaimer:'이 정보는 인식 목적으로만 제공됩니다. 전문 의료 조언을 대체하지 않습니다. 증상이 심하거나 악화되면 즉시 800-7999로 전화하세요.'
+  },
+  en: {
+    heroTitle: "When you're alone,<br><span>60 seconds</span> that protect you",
+    heroSub: 'Know the warning signs. Take the right first step. Call for help.',
+    statCards:'Cards', statParts:'Parts', statQuiz:'Per Quiz',
+    eyebrowEmergency:'Emergency', eyebrowMission:"This Week's Mission", eyebrowRecent:'Recent Cards',
+    week1:'Quick Mission', missionTitle:'Food stuck in throat',
+    missionDesc:"You're alone eating fruit when you suddenly can't breathe. What's your first move?",
+    startMission:'View Card',
+    emergencyStep1:'State your name · location · symptoms', emergencyStep2:'Unlock your door',
+    c001t:'Food Stuck in Throat', c002t:'Woke Up Unable to Breathe',
+    c007t:'Sudden Chest Pain', c021t:'Chest Pain While Driving',
+    viewAll:'View All Cards', back:'Back', viewCard:'View Card',
+    next:'Next', correct:'Correct', retry:'Try Again',
+    viewCard001:'View Card #001', goHome:'Go Home',
+    survivalCards:'Survival Cards', tabAll:'All 28',
+    cardList:'Card List', shareTitle:'Share Card',
+    cancel:'Cancel', saveShare:'Save Image · Share',
+    navHome:'Home', navQuiz:'Quiz', navCards:'Cards', navSOS:'SOS',
+    scenario:'Scenario', check:'Check', action:'Initial Action',
+    redflag:'RED FLAG — Call Now', didyouknow:'Did You Know?',
+    shareBtn:'Share Card', quizBtn:'Take Quiz',
+    callConfirm:'Call BNPP Emergency 800-7999?',
+    correctFb:'✅ Correct!', wrongFb:'❌ Wrong answer',
+    score100:'Perfect!',
+    score70:'Try again.',
+    score0:'Try again.',
+    comingSoon:'Card coming soon 🔜',
+    saving:'Saving image...', copied:'Link copied ✓',
+    cards:'Cards', parts:'Parts', perQuiz:'Per Quiz',
+    emergency:'Emergency', recentCards:'Featured Cards',
+    card001Title:'Food stuck in throat', card001Desc:"You're alone eating fruit when you suddenly can't breathe. What's your first move?",
+    card001Title2:'Food Stuck in Throat', card002Title:'Woke Up Unable to Breathe',
+    card007Title:'Sudden Chest Pain', card021Title:'Chest Pain While Driving',
+    disclaimer:'This information is for awareness only and does not replace professional medical advice. If symptoms are severe or worsening, call 800-7999 immediately.'
+  }
+};
+
+let currentLang = 'ko';
+function t(k){ return (LANG[currentLang] && LANG[currentLang][k]) ? LANG[currentLang][k] : (LANG.ko[k] || k); }
+
+function setLang(lang, btn){
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    if(LANG[currentLang] && LANG[currentLang][k]) el.innerHTML = LANG[currentLang][k];
+  });
+  updateCardCounts();
+  updateWeeklyMission();
+  if(currentScreen === 'cards') renderCardsList(currentFilter);
+}
+
+// ══ CARDS (28 cards) ══
+// HOW TO EDIT: Find card by id. Edit title/scenario/checks/actions/redflags/didyouknow/timeNote.
+// Each has ko (Korean) and en (English). To add image: set image:'images/card001.png'
+const CARDS = [
+  { id:'001', part:'home', emoji:'🍅', image:null,
+    title:{ ko:'음식이 목에 걸렸을 때', en:'Food Stuck in Throat' },
+    scenario:{ ko:'혼자 숙소에서 방울토마토를 먹던 중 갑자기 숨이 막혔습니다. 말도 나오지 않습니다.', en:"You're alone eating a cherry tomato when you suddenly can't breathe. You cannot speak." },
+    checks:{ ko:['기침이 가능한가?','말을 할 수 있는가?','숨이 조금이라도 쉬어지는가?'], en:['Can you cough?','Can you speak?','Can you breathe at all?'] },
+    actions:{ ko:['기침이 나오면 → 강하게 기침을 계속하세요. 물을 마시지 마세요.','기침이 안 되면 → 주먹을 배꼽과 명치 사이에 대세요.','다른 손으로 주먹을 감싸 안쪽 위로 강하게 밀어 올리세요 (하임리히).','혼자라면 → 딱딱한 의자 등받이에 배 윗부분을 강하게 압박하세요.','즉시 800-7999에 신고하세요.'], en:['If you can cough → keep coughing forcefully. Do NOT drink water.','If you cannot cough → make a fist between navel and breastbone.','Grab fist with other hand and thrust inward and upward (Heimlich).','If alone → press upper abdomen hard against a firm chair back.','Call 800-7999 immediately.'] },
+    redflags:{ ko:['기침이 전혀 안 된다','숨이 완전히 막혔다','입술이나 손가락이 파래진다','의식이 흐려지는 느낌'], en:['Cannot cough at all','Completely unable to breathe','Lips or fingers turning blue','Feeling faint or losing consciousness'] },
+    didyouknow:{ ko:'완전 기도 폐쇄는 4~6분 안에 뇌 손상이 시작됩니다. 혼자라도 하임리히 자가시행이 가능합니다.', en:'Complete airway obstruction can cause brain damage within 4-6 minutes. Self-administered Heimlich is possible even alone.' },
+    timeNote:{ ko:'완전 기도 폐쇄는 매초가 중요합니다.', en:'Every second counts in complete airway obstruction.' }
+  },
+  { id:'002', part:'home', emoji:'😴', image:null,
+    title:{ ko:'자다가 숨이 막혀 깼을 때', en:'Woke Up Unable to Breathe' },
+    scenario:{ ko:'새벽에 갑자기 숨이 막히는 느낌에 잠을 깼습니다. 가슴이 답답하고 식은땀이 납니다.', en:"You wake up feeling like you can't breathe. Chest feels tight, cold sweat." },
+    checks:{ ko:['기침이나 호흡이 가능한가?','가슴 통증이 함께 있는가?','일어나 앉으면 조금 나아지는가?'], en:['Can you cough or breathe?','Is there chest pain?','Does sitting up help?'] },
+    actions:{ ko:['즉시 일어나 앉으세요. 누운 자세는 증상을 악화시킬 수 있습니다.','창문을 열거나 에어컨을 켜 신선한 공기를 확보하세요.','5분 이내에 회복되지 않으면 즉시 800-7999에 신고하세요.','가슴 통증이 동반되면 즉시 신고하세요.'], en:['Sit up immediately. Lying down can worsen symptoms.','Open a window or turn on AC for fresh air.','If not recovered within 5 minutes, call 800-7999.','If chest pain is present, call immediately.'] },
+    redflags:{ ko:['일어나도 호흡이 나아지지 않는다','가슴 통증이 동반된다','식은땀이 심하게 난다','입술이 파래진다'], en:["Breathing doesn't improve after sitting up",'Chest pain present','Heavy sweating','Lips turning blue'] },
+    didyouknow:{ ko:'수면 무호흡증이 있는 경우 새벽 호흡 곤란이 반복될 수 있습니다. 한 번이라도 있었다면 의사에게 알리세요.', en:'Sleep apnea can cause repeated nighttime breathing episodes. Report even a single episode to a doctor.' },
+    timeNote:{ ko:'가슴 통증이 함께 있다면 즉시 신고하세요.', en:'If chest pain is present, call immediately.' }
+  },
+  { id:'004', part:'home', emoji:'🤢', image:null,
+    title:{ ko:'식중독이 의심될 때', en:'Suspected Food Poisoning' },
+    scenario:{ ko:'식사 후 몇 시간이 지나 심한 구역질, 구토, 복통이 함께 왔습니다.', en:'Hours after eating, severe nausea, vomiting, and abdominal pain hit together.' },
+    checks:{ ko:['구토나 설사가 반복되는가?','복통이 심한가?','발열이 동반되는가?'], en:['Repeated vomiting or diarrhea?','Severe abdominal pain?','Fever present?'] },
+    actions:{ ko:['즉시 누워서 안정을 취하세요.','소량의 물을 조금씩 마시세요.','구토 후 구강을 물로 헹구세요.','증상이 심하거나 지속되면 800-7999에 신고하세요.'], en:['Lie down and rest immediately.','Sip small amounts of water.','Rinse your mouth with water after vomiting.','If severe or persistent, call 800-7999.'] },
+    redflags:{ ko:['혈변 또는 혈토가 있다','의식이 흐려진다','24시간 이상 지속된다','극심한 탈수 증상'], en:['Blood in stool or vomit','Altered consciousness','Lasting more than 24 hours','Severe dehydration'] },
+    didyouknow:{ ko:'식중독 후 스포츠 음료는 전해질 보충에 도움이 됩니다. 설사 중에는 유제품을 피하세요.', en:'Sports drinks help replenish electrolytes after food poisoning. Avoid dairy during diarrhea.' },
+    timeNote:{ ko:'탈수가 빠르게 진행될 수 있습니다.', en:'Dehydration can progress quickly.' }
+  },
+  { id:'005', part:'home', emoji:'😵', image:null,
+    title:{ ko:'기립성 저혈압', en:'Orthostatic Hypotension' },
+    scenario:{ ko:'갑자기 일어났을 때 심한 어지러움과 함께 눈앞이 캄캄해졌습니다.', en:'You stand up quickly and everything goes dark with severe dizziness.' },
+    checks:{ ko:['어지러움이 가라앉고 있는가?','가슴 통증이나 두통이 동반되는가?','실제로 쓰러질 것 같은가?'], en:['Is dizziness fading?','Is there chest pain or headache?','Do you feel about to faint?'] },
+    actions:{ ko:['즉시 앉거나 눕고 안정을 취하세요.','천천히 자리에서 일어나세요.','물을 마셔 수분을 보충하세요.','1~2분 후에도 지속되면 800-7999에 신고하세요.'], en:['Sit or lie down immediately.','Rise slowly when feeling better.','Drink water to rehydrate.','If persists after 1-2 minutes, call 800-7999.'] },
+    redflags:{ ko:['실제로 의식을 잃었다','가슴 통증이 동반된다','어지러움이 5분 이상 지속된다','두통이 매우 심하다'], en:['Actually lost consciousness','Chest pain present','Dizziness lasting more than 5 minutes','Severe headache'] },
+    didyouknow:{ ko:'UAE 더위와 장시간 서 있는 환경에서 기립성 저혈압이 매우 흔합니다.', en:'Orthostatic hypotension is very common in UAE heat and environments requiring prolonged standing.' },
+    timeNote:{ ko:'넘어지기 전에 앉으세요.', en:'Sit down before you fall.' }
+  },
+  { id:'006', part:'home', emoji:'😤', image:null,
+    title:{ ko:'심한 과호흡', en:'Severe Hyperventilation' },
+    scenario:{ ko:'갑작스러운 불안으로 호흡이 매우 빨라지고 손발이 저려옵니다.', en:'Sudden anxiety makes you breathe very fast. Hands and feet feel numb and tingly.' },
+    checks:{ ko:['가슴 통증이 동반되는가?','입술 주변이 저린가?','심장이 비정상적으로 빠르게 뛰는가?'], en:['Is there chest pain?','Numbness around lips?','Heart beating abnormally fast?'] },
+    actions:{ ko:['조용한 곳에 앉아 의식적으로 호흡을 늦추세요.','코로 4초 들이쉬고 입으로 6초 내쉬세요.','종이봉투가 있다면 입에 대고 천천히 호흡하세요.','5분 후에도 호전되지 않으면 800-7999에 신고하세요.'], en:['Sit quietly and consciously slow your breathing.','Inhale through nose 4 sec, exhale through mouth 6 sec.','If paper bag available, breathe into it slowly.','If not improved after 5 minutes, call 800-7999.'] },
+    redflags:{ ko:['가슴 통증이 동반된다','입술이 파래진다','의식이 흐려진다','5분 이상 지속된다'], en:['Chest pain present','Lips turning blue','Altered consciousness','Lasting more than 5 minutes'] },
+    didyouknow:{ ko:'과호흡은 이산화탄소 과다 배출로 발생합니다. 처음 경험하면 매우 무서울 수 있습니다.', en:'Hyperventilation is caused by excessive CO2 expulsion. It can be very frightening the first time.' },
+    timeNote:{ ko:'가슴 통증이 있다면 즉시 신고하세요.', en:'If chest pain is present, call immediately.' }
+  },
+  { id:'007', part:'home', emoji:'💔', image:null,
+    title:{ ko:'갑작스러운 흉통', en:'Sudden Chest Pain' },
+    scenario:{ ko:'휴식 중 갑자기 가슴 한가운데가 강하게 조여드는 느낌이 왔습니다. 왼쪽 팔도 묵직합니다.', en:'While resting, a strong squeezing pain hits the center of your chest. Your left arm feels heavy.' },
+    checks:{ ko:['통증이 쥐어짜는 듯한 압박감인가?','왼팔, 턱, 어깨로 통증이 퍼지는가?','식은땀, 메스꺼움이 동반되는가?'], en:['Is the pain a squeezing or pressure feeling?','Does pain spread to left arm, jaw, or shoulder?','Is there sweating or nausea?'] },
+    actions:{ ko:['즉시 앉거나 편한 자세로 눕으세요. 움직이지 마세요.','800-7999에 즉시 전화하세요.','아스피린이 있고 알레르기가 없다면 씹어 복용하세요.'], en:['Sit or lie comfortably. Do not move.','Call 800-7999 immediately.','If you have aspirin and no allergy, chew it.'] },
+    redflags:{ ko:['가슴 통증이 15분 이상 지속된다','왼팔, 턱, 등으로 통증이 퍼진다','식은땀 + 메스꺼움 동반','호흡 곤란이 함께 온다'], en:['Chest pain lasting more than 15 minutes','Pain spreading to left arm, jaw, or back','Sweating + nausea together','Difficulty breathing'] },
+    didyouknow:{ ko:'심장마비 시 여성은 흉통 대신 구역질, 피로감, 턱 통증만 느끼는 경우가 많습니다.', en:'Women having a heart attack often feel nausea, fatigue, and jaw pain instead of classic chest pain.' },
+    timeNote:{ ko:'골든타임은 발생 후 90분입니다.', en:'The golden window is 90 minutes from onset.' }
+  },
+  { id:'008', part:'home', emoji:'🗣️', image:null,
+    title:{ ko:'말이 어눌해졌을 때', en:'Sudden Slurred Speech' },
+    scenario:{ ko:'갑자기 말이 제대로 나오지 않거나 상대방의 말이 이해되지 않습니다.', en:"Suddenly you can't speak properly or understand what others say." },
+    checks:{ ko:['미소 지을 때 얼굴이 한쪽만 올라가는가?','양팔을 들었을 때 한쪽이 처지는가?','말이 어눌하거나 이상한가?'], en:['When smiling, does one side of face droop?','When raising both arms, does one side droop?','Is speech slurred or strange?'] },
+    actions:{ ko:['즉시 앉아서 안정을 취하세요.','FAST 확인: 얼굴(Face), 팔(Arms), 말(Speech), 시간(Time).','즉시 800-7999에 신고하세요. 뇌졸중 의심 증상입니다.','증상 시작 시간을 기억하세요.'], en:['Sit down and stay calm immediately.','Check FAST: Face, Arms, Speech, Time.','Call 800-7999 immediately. Suspected stroke.','Remember when symptoms started.'] },
+    redflags:{ ko:['얼굴 한쪽이 처진다','한쪽 팔에 힘이 없다','말이 전혀 안 된다','갑작스러운 극심한 두통'], en:['One side of face drooping','Weakness in one arm','Cannot speak at all','Sudden severe headache'] },
+    didyouknow:{ ko:'뇌졸중은 골든타임이 4.5시간입니다. 증상 시작 시간을 반드시 기억하세요.', en:'The stroke golden window is 4.5 hours. Always remember when symptoms started.' },
+    timeNote:{ ko:'뇌졸중은 매 분이 골든타임입니다.', en:'Every minute is golden time for stroke.' }
+  },
+  { id:'009', part:'home', emoji:'💪', image:null,
+    title:{ ko:'한쪽 팔·다리에 힘이 빠질 때', en:'Sudden Weakness on One Side' },
+    scenario:{ ko:'갑자기 한쪽 팔이나 다리에 힘이 빠져 물건을 떨어뜨리거나 걷기가 어렵습니다.', en:'Suddenly one arm or leg feels weak. You drop things or have trouble walking.' },
+    checks:{ ko:['증상이 한쪽에만 나타나는가?','말이 어눌해졌는가?','얼굴이 한쪽으로 처지는가?'], en:['Are symptoms only on one side?','Is speech slurred?','Is one side of face drooping?'] },
+    actions:{ ko:['즉시 앉아서 안정을 취하세요.','800-7999에 즉시 신고하세요. 뇌졸중 의심 증상입니다.','혼자 걷거나 운전하려 하지 마세요.','증상 시작 시간을 기억하세요.'], en:['Sit down immediately.','Call 800-7999 immediately. Suspected stroke.','Do not walk alone or drive.','Remember when symptoms started.'] },
+    redflags:{ ko:['양쪽 팔다리 모두 힘이 빠진다','의식이 흐려진다','말이 안 된다','극심한 두통이 동반된다'], en:['Weakness in both sides','Altered consciousness','Cannot speak','Severe headache present'] },
+    didyouknow:{ ko:'한쪽만 힘이 빠지는 증상은 뇌졸중의 가장 전형적인 신호 중 하나입니다.', en:'Weakness on one side is one of the most classic warning signs of stroke.' },
+    timeNote:{ ko:'뇌졸중 골든타임 4.5시간', en:'Stroke golden window: 4.5 hours' }
+  },
+  { id:'010', part:'home', emoji:'🤯', image:null,
+    title:{ ko:'극심한 두통', en:'Thunderclap Headache' },
+    scenario:{ ko:'평생 경험해보지 못한 수준의 갑작스럽고 극심한 두통이 왔습니다.', en:'The worst headache of your life hits suddenly and intensely.' },
+    checks:{ ko:['평생 중 가장 심한 두통인가?','목이 뻣뻣한가?','구토가 동반되는가?'], en:['Is this the worst headache of your life?','Is your neck stiff?','Is there vomiting?'] },
+    actions:{ ko:['즉시 눕거나 앉아서 안정을 취하세요.','800-7999에 즉시 신고하세요. 뇌출혈 가능성이 있습니다.','밝은 빛이나 소음을 피하세요.','진통제를 임의로 복용하지 마세요.'], en:['Lie down or sit and rest immediately.','Call 800-7999 immediately. Brain hemorrhage possible.','Avoid bright light and noise.','Do not take painkillers without guidance.'] },
+    redflags:{ ko:['갑자기 발생한 최악의 두통','목이 뻣뻣하고 발열이 동반','의식이 흐려진다','시야 장애가 생긴다'], en:['Sudden worst-ever headache','Stiff neck with fever','Altered consciousness','Vision disturbance'] },
+    didyouknow:{ ko:'"벼락 두통"은 뇌동맥류 파열의 신호일 수 있습니다. 즉각적인 응급 처치가 필요합니다.', en:'"Thunderclap headache" can signal a ruptured brain aneurysm. Immediate emergency care needed.' },
+    timeNote:{ ko:'즉각적인 신고가 필요합니다.', en:'Immediate reporting is needed.' }
+  },
+  { id:'013', part:'home', emoji:'😣', image:null,
+    title:{ ko:'심한 복통', en:'Severe Abdominal Pain' },
+    scenario:{ ko:'갑자기 참을 수 없을 정도의 복통이 왔습니다. 움직이기조차 힘듭니다.', en:'Sudden unbearable abdominal pain. You can barely move.' },
+    checks:{ ko:['통증이 지속적인가 아니면 파도처럼 오는가?','복부가 딱딱하게 굳어 있는가?','발열이 동반되는가?'], en:['Is the pain constant or wave-like?','Is the abdomen rigid?','Is there fever?'] },
+    actions:{ ko:['편한 자세로 눕거나 앉으세요.','음식이나 음료를 섭취하지 마세요.','진통제를 임의로 복용하지 마세요.','800-7999에 신고하거나 악화되면 즉시 신고하세요.'], en:['Lie or sit comfortably.','Do not eat or drink anything.','Do not take painkillers.','Call 800-7999, or immediately if worsening.'] },
+    redflags:{ ko:['복부가 딱딱하게 굳는다','발열이 38.5도 이상이다','구토에 혈액이 섞인다','통증이 어깨까지 퍼진다'], en:['Abdomen becomes rigid','Fever above 38.5°C','Blood in vomit','Pain spreading to shoulder'] },
+    didyouknow:{ ko:'복통 시 진통제 복용은 진단을 방해할 수 있어 의료진이 권장하지 않습니다.', en:'Taking painkillers for abdominal pain can interfere with diagnosis.' },
+    timeNote:{ ko:'복부 경직은 즉각 신고가 필요합니다.', en:'Abdominal rigidity requires immediate reporting.' }
+  },
+  { id:'014', part:'home', emoji:'🤮', image:null,
+    title:{ ko:'구토가 멈추지 않을 때', en:"Vomiting Won't Stop" },
+    scenario:{ ko:'1시간 이상 구토가 계속되어 아무것도 먹지 못하고 탈수가 걱정됩니다.', en:"Vomiting has continued for over an hour. You can't keep anything down." },
+    checks:{ ko:['구토물에 혈액이 섞여 있는가?','어지러움이나 의식 저하가 있는가?','마지막 소변이 언제였는가?'], en:['Is there blood in the vomit?','Any dizziness or altered consciousness?','When was your last urination?'] },
+    actions:{ ko:['눕거나 앉아서 안정을 취하세요.','구토 후 입을 물로 헹구세요.','얼음 조각을 입에 물어 조금씩 수분을 보충하세요.','2시간 이상 지속되면 800-7999에 신고하세요.'], en:['Lie down or sit and rest.','Rinse mouth after vomiting.','Suck ice chips to slowly rehydrate.','If lasting more than 2 hours, call 800-7999.'] },
+    redflags:{ ko:['구토물에 혈액이 보인다','8시간 이상 소변이 없다','의식이 흐려진다','심한 어지러움'], en:['Blood in vomit','No urination for 8+ hours','Altered consciousness','Severe dizziness'] },
+    didyouknow:{ ko:'탈수 초기 신호는 소변 색이 진해지는 것입니다.', en:'An early sign of dehydration is dark urine.' },
+    timeNote:{ ko:'탈수는 빠르게 악화될 수 있습니다.', en:'Dehydration can worsen rapidly.' }
+  },
+  { id:'016', part:'home', emoji:'🐝', image:null,
+    title:{ ko:'알레르기 반응', en:'Allergic Reaction' },
+    scenario:{ ko:'음식을 먹거나 벌에 쏘인 후 전신 두드러기와 함께 목이 조여드는 느낌이 옵니다.', en:'After eating or a bee sting, whole-body hives with throat tightening.' },
+    checks:{ ko:['목이 조여드는 느낌이 있는가?','호흡이 어려워지고 있는가?','에피펜이 있는가?'], en:['Is there throat tightening?','Is breathing becoming difficult?','Do you have an EpiPen?'] },
+    actions:{ ko:['에피펜이 있다면 즉시 허벅지에 자가주사하세요.','즉시 800-7999에 신고하세요.','원인 물질을 즉시 피하세요.','누워서 다리를 높이 올리세요 (쇼크 자세).'], en:['If you have an EpiPen, inject into thigh immediately.','Call 800-7999 immediately.','Avoid the trigger immediately.','Lie down and raise your legs (shock position).'] },
+    redflags:{ ko:['목이 조여들어 숨쉬기 힘들다','전신 두드러기와 혈압 저하','의식이 흐려진다','입술이나 혀가 부어오른다'], en:['Throat tightening makes breathing hard','Hives with dropping blood pressure','Altered consciousness','Lips or tongue swelling'] },
+    didyouknow:{ ko:'아나필락시스는 수분 내에 생명을 위협할 수 있습니다. 에피펜 소지자는 팀원에게 위치를 알려두세요.', en:'Anaphylaxis can become life-threatening within minutes. EpiPen carriers must tell team members.' },
+    timeNote:{ ko:'아나필락시스는 즉각적인 대응이 필요합니다.', en:'Anaphylaxis requires immediate action.' }
+  },
+  { id:'017', part:'home', emoji:'🐛', image:null,
+    title:{ ko:'벌레·벌에 쏘였을 때', en:'Insect or Bee Sting' },
+    scenario:{ ko:'숙소 근처에서 벌이나 벌레에 쏘여 해당 부위가 붓고 심하게 아픕니다.', en:'Stung by a bee or insect. The area is swelling and very painful.' },
+    checks:{ ko:['호흡 곤란이나 목 조임이 있는가?','전신 두드러기가 생기는가?','벌침이 아직 피부에 박혀 있는가?'], en:['Any breathing difficulty or throat tightening?','Any whole-body hives?','Is the stinger still in the skin?'] },
+    actions:{ ko:['벌침이 있다면 카드로 긁어 제거하세요.','찬물이나 얼음으로 쏘인 부위를 냉각하세요.','항히스타민제가 있다면 복용하세요.','호흡 곤란이나 전신 증상이 나타나면 즉시 800-7999에 신고하세요.'], en:['Remove stinger by scraping with a card.','Cool the sting site with cold water or ice.','Take antihistamine if available.','If breathing difficulty or systemic symptoms, call 800-7999.'] },
+    redflags:{ ko:['호흡 곤란이 시작된다','전신 두드러기가 퍼진다','입술이나 혀가 붓는다','어지러움과 함께 의식이 흐려진다'], en:['Breathing difficulty starts','Whole-body hives spreading','Lips or tongue swelling','Dizziness with altered consciousness'] },
+    didyouknow:{ ko:'UAE에서는 사막 전갈에 쏘이는 사례도 드물지 않습니다. 신발 속과 침구를 항상 확인하세요.', en:'Desert scorpion stings are not uncommon in UAE. Always check inside shoes and bedding.' },
+    timeNote:{ ko:'알레르기 반응은 빠르게 진행됩니다.', en:'Allergic reactions can progress rapidly.' }
+  },
+  { id:'018', part:'home', emoji:'🛁', image:null,
+    title:{ ko:'욕실에서 넘어졌을 때', en:'Fall in the Bathroom' },
+    scenario:{ ko:'샤워 중 미끄러져 욕실 바닥에 넘어졌습니다. 통증이 심하고 일어서기가 힘듭니다.', en:'You slipped in the shower and fell. Severe pain and difficulty standing.' },
+    checks:{ ko:['머리를 부딪혔는가?','일어설 수 있는가?','극심한 통증 부위가 있는가?'], en:['Did you hit your head?','Can you stand up?','Is there an area of extreme pain?'] },
+    actions:{ ko:['즉시 움직이지 마세요. 추가 부상을 방지하세요.','머리를 부딪혔다면 절대 일어나려 하지 마세요.','소리를 질러 도움을 요청하거나 800-7999에 신고하세요.','일어설 수 있다면 천천히 벽을 짚고 일어나세요.'], en:['Do not move immediately.','If you hit your head, do not try to stand.','Shout for help or call 800-7999.','If able, slowly use the wall for support.'] },
+    redflags:{ ko:['머리를 부딪혔고 의식이 흐릿하다','골절이 의심된다','일어설 수가 없다','구토가 동반된다'], en:['Hit head with altered consciousness','Suspected fracture','Cannot stand up','Vomiting present'] },
+    didyouknow:{ ko:'욕실 낙상은 50세 이상에서 골절의 가장 흔한 원인입니다. 미끄럼 방지 매트는 필수입니다.', en:'Bathroom falls are the most common cause of fractures in people over 50. Non-slip mats are essential.' },
+    timeNote:{ ko:'머리 부상 시 즉각 신고하세요.', en:'Report head injuries immediately.' }
+  },
+  { id:'019', part:'home', emoji:'🌡️', image:null,
+    title:{ ko:'고열이 계속될 때', en:'Persistent High Fever' },
+    scenario:{ ko:'체온이 39도 이상이고 해열제를 복용해도 열이 내리지 않습니다.', en:'Temperature above 39°C. Fever not coming down despite fever reducers.' },
+    checks:{ ko:['체온이 몇 도인가?','목이 뻣뻣한가?','발진이 있는가?'], en:['What is the exact temperature?','Is the neck stiff?','Is there a rash?'] },
+    actions:{ ko:['서늘한 환경에서 안정을 취하세요.','해열제를 복용하고 충분한 수분을 섭취하세요.','얼음찜질로 몸을 식히세요.','39.5도 이상 지속되면 800-7999에 신고하세요.'], en:['Rest in a cool environment.','Take fever reducer and stay hydrated.','Apply ice packs to cool down.','If above 39.5°C persists, call 800-7999.'] },
+    redflags:{ ko:['40도 이상의 고열','목이 뻣뻣하고 두통이 심하다','발진이 생긴다','의식이 흐려진다'], en:['Fever above 40°C','Stiff neck with severe headache','Rash appearing','Altered consciousness'] },
+    didyouknow:{ ko:'UAE 더위 속에서 고열과 열사병을 혼동할 수 있습니다. 열사병은 땀이 나지 않는 특징이 있습니다.', en:'In UAE heat, fever and heat stroke can be confused. Heat stroke is characterized by no sweating.' },
+    timeNote:{ ko:'40도 이상은 즉각적인 신고가 필요합니다.', en:'Above 40°C requires immediate reporting.' }
+  },
+  { id:'020', part:'home', emoji:'😶', image:null,
+    title:{ ko:'혼자 있는데 의식을 잃을 것 같을 때', en:'Feeling Faint When Alone' },
+    scenario:{ ko:'혼자 숙소에 있는데 갑자기 눈앞이 캄캄해지고 의식을 잃을 것 같습니다.', en:"Alone in your room, everything goes dark and you feel like you're about to lose consciousness." },
+    checks:{ ko:['지금 통화가 가능한가?','주변에 날카롭거나 위험한 물건이 있는가?','문이 잠겨 있는가?'], en:['Can you make a call right now?','Are there sharp objects nearby?','Is the door locked?'] },
+    actions:{ ko:['지금 즉시 800-7999에 전화하세요.','바닥에 앉거나 누우세요. 쓰러지지 않도록 하세요.','문을 열어두세요. 구조대가 들어올 수 있어야 합니다.','날카로운 물건 주변을 피하세요.'], en:['Call 800-7999 immediately right now.','Sit or lie on the floor to prevent falling.','Open the door so responders can enter.','Move away from sharp objects.'] },
+    redflags:{ ko:['실제로 의식을 잃었다','가슴 통증이 동반됐다','머리를 부딪혔다'], en:['Actually lost consciousness','Chest pain was present','Hit head during fall'] },
+    didyouknow:{ ko:'의식 소실 전 가장 중요한 행동은 전화하기와 문 열기입니다. 이 두 가지가 생사를 가를 수 있습니다.', en:'The two most important actions before losing consciousness: calling for help and opening the door.' },
+    timeNote:{ ko:'의식 소실 전 전화와 문 열기가 최우선입니다.', en:'Calling and opening the door before losing consciousness is the top priority.' }
+  },
+  { id:'021', part:'drive', emoji:'🚗', image:null,
+    title:{ ko:'운전 중 흉통', en:'Chest Pain While Driving' },
+    scenario:{ ko:'고속도로 운전 중 갑자기 가슴이 조여드는 느낌이 옵니다. 식은땀이 납니다.', en:'On the highway, sudden chest tightening hits. Cold sweat breaking out.' },
+    checks:{ ko:['안전하게 차를 세울 수 있는가?','통증이 점점 심해지는가?','팔이나 턱으로 통증이 퍼지는가?'], en:['Can you safely pull over?','Is the pain getting worse?','Is pain spreading to arm or jaw?'] },
+    actions:{ ko:['즉시 비상등을 켜세요.','최대한 빨리 갓길 또는 안전한 곳에 차를 세우세요.','기어를 P에 넣고 사이드브레이크를 당기세요.','800-7999에 전화하세요. 위치와 도로 이름을 알려주세요.'], en:['Turn on hazard lights immediately.','Pull over to the shoulder as quickly as possible.','Put car in Park and apply handbrake.','Call 800-7999. Give location and road name.'] },
+    redflags:{ ko:['통증이 15분 이상 지속된다','시야가 흐려진다','의식이 흐려지는 느낌','팔, 턱으로 통증이 퍼진다'], en:['Pain lasting more than 15 minutes','Vision becoming blurry','Feeling faint','Pain spreading to arm or jaw'] },
+    didyouknow:{ ko:'"조금만 더 가다 세우자"는 생각이 가장 위험합니다. 흉통이 오면 즉시 멈추는 것이 유일한 정답입니다.', en:'"Just a little further" is the most dangerous thought. Stopping immediately is the only right answer.' },
+    timeNote:{ ko:'운전 중엔 즉시 멈추는 것이 최선입니다.', en:'When driving, stopping immediately is always the right call.' }
+  },
+  { id:'022', part:'drive', emoji:'💫', image:null,
+    title:{ ko:'운전 중 어지러움', en:'Dizziness While Driving' },
+    scenario:{ ko:'운전 중 갑자기 심한 어지러움과 함께 차가 흔들리는 느낌이 납니다.', en:'Sudden severe dizziness while driving. The car feels like it is swaying.' },
+    checks:{ ko:['시야가 흔들리거나 이중으로 보이는가?','구역질이 동반되는가?','안전하게 멈출 수 있는가?'], en:['Is vision shaking or doubled?','Is there nausea?','Can you stop safely?'] },
+    actions:{ ko:['즉시 비상등을 켜고 갓길에 세우세요.','엔진을 끄고 안정을 취하세요.','5분 후에도 어지러움이 지속되면 800-7999에 신고하세요.','어지러운 상태에서 절대 운전을 재개하지 마세요.'], en:['Turn on hazard lights and pull over immediately.','Turn off engine and rest.','If dizziness persists after 5 minutes, call 800-7999.','Never resume driving while dizzy.'] },
+    redflags:{ ko:['시야가 이중으로 보인다','귀에서 소리가 난다','한쪽 팔다리에 힘이 빠진다','말이 어눌해진다'], en:['Double vision','Ringing in ears','Weakness in one arm or leg','Slurred speech'] },
+    didyouknow:{ ko:'운전 중 갑작스러운 어지러움은 뇌졸중의 초기 증상일 수 있습니다.', en:'Sudden dizziness while driving can be an early symptom of stroke.' },
+    timeNote:{ ko:'어지러운 상태에서 운전하지 마세요.', en:'Never drive while dizzy.' }
+  },
+  { id:'023', part:'drive', emoji:'😪', image:null,
+    title:{ ko:'졸음운전', en:'Drowsy Driving' },
+    scenario:{ ko:'장거리 운전 중 눈이 감기고 차선을 이탈할 뻔했습니다.', en:'On a long drive, eyes are closing and you nearly drifted out of your lane.' },
+    checks:{ ko:['마지막으로 잠을 잔 게 언제인가?','이미 한 번 이상 깜빡 졸았는가?','다음 휴게소까지 얼마나 남았는가?'], en:['When did you last sleep?','Have you already dozed off once?','How far is the next rest area?'] },
+    actions:{ ko:['즉시 안전한 곳에 차를 세우세요.','창문을 열고 신선한 공기를 마시세요.','15~20분 짧은 낮잠을 자세요.','동승자가 있다면 교대 운전을 하세요.'], en:['Pull over to a safe place immediately.','Open the window and get fresh air.','Take a short 15-20 minute nap.','Switch drivers if there is a passenger.'] },
+    redflags:{ ko:['이미 사고가 날 뻔했다','졸음을 억지로 참으며 운전하고 있다','카페인을 먹어도 효과가 없다'], en:['Already nearly had an accident','Forcing yourself to stay awake','Caffeine no longer helping'] },
+    didyouknow:{ ko:'졸음운전은 음주운전만큼 위험합니다. UAE 사막 도로는 단조로워 졸음을 유발하기 쉽습니다.', en:'Drowsy driving is as dangerous as drunk driving. UAE desert roads are monotonous and easily induce drowsiness.' },
+    timeNote:{ ko:'졸리면 즉시 멈추세요.', en:'If sleepy, stop immediately.' }
+  },
+  { id:'024', part:'drive', emoji:'🔥', image:null,
+    title:{ ko:'차량 화재', en:'Vehicle Fire' },
+    scenario:{ ko:'운전 중 후드 쪽에서 연기가 나기 시작하거나 차 안에서 타는 냄새가 납니다.', en:'While driving, smoke appears from the hood or you smell burning inside the car.' },
+    checks:{ ko:['연기가 보이는가?','타는 냄새가 나는가?','계기판에 경고등이 켜졌는가?'], en:['Can you see smoke?','Is there a burning smell?','Are warning lights on?'] },
+    actions:{ ko:['즉시 비상등을 켜고 갓길에 세우세요.','엔진을 끄고 모든 탑승자를 즉시 하차시키세요.','차량에서 최소 50미터 이상 떨어지세요.','800-7999에 신고하세요.'], en:['Turn on hazard lights and pull over immediately.','Turn off engine and get everyone out immediately.','Move at least 50 meters away from the vehicle.','Call 800-7999.'] },
+    redflags:{ ko:['화염이 보인다','폭발음이 들린다','문이 열리지 않는다'], en:['Flames are visible','Explosion sounds heard','Doors will not open'] },
+    didyouknow:{ ko:'차량 화재는 엔진이 꺼진 후에도 계속 번질 수 있습니다. 차에서 멀리 떨어지는 것이 최우선입니다.', en:'Vehicle fires can spread even after engine is off. Getting far from the car is the top priority.' },
+    timeNote:{ ko:'차량에서 즉시 탈출하세요.', en:'Evacuate the vehicle immediately.' }
+  },
+  { id:'025', part:'drive', emoji:'💥', image:null,
+    title:{ ko:'교통사고 후 멀쩡한 느낌', en:'Feeling Fine After a Crash' },
+    scenario:{ ko:'교통사고가 났는데 지금 당장은 아프지 않습니다. 하지만 충격이 꽤 컸습니다.', en:"You were in an accident. Right now you feel okay. But the impact was significant." },
+    checks:{ ko:['머리나 목을 부딪혔는가?','에어백이 전개되었는가?','속도가 얼마나 됐는가?'], en:['Did you hit head or neck?','Did the airbag deploy?','What was the speed?'] },
+    actions:{ ko:['차를 안전한 곳에 세우고 엔진을 끄세요.','목과 허리를 갑자기 움직이지 마세요.','800-7999에 신고하고 의료 확인을 받으세요.','증상이 없어도 반드시 의료진 검진을 받으세요.'], en:['Park safely and turn off the engine.','Do not make sudden movements of neck or back.','Call 800-7999 and get a medical check.','Get a medical exam even with no symptoms.'] },
+    redflags:{ ko:['목이나 등이 뻐근해진다','머리가 아프기 시작한다','어지러움이 생긴다','사고 직후 기억이 없다'], en:['Neck or back becoming stiff','Headache starting','Dizziness appearing','No memory of the impact'] },
+    didyouknow:{ ko:'교통사고 후 통증은 수 시간에서 수일 후에 나타날 수 있습니다.', en:'Pain after an accident can appear hours or days later. Never trust the feeling of being fine.' },
+    timeNote:{ ko:'증상이 없어도 반드시 검진을 받으세요.', en:'Always get checked even without symptoms.' }
+  },
+  { id:'026', part:'drive', emoji:'🚨', image:null,
+    title:{ ko:'브레이크 고장', en:'Brake Failure' },
+    scenario:{ ko:'브레이크를 밟아도 차가 서지 않습니다. 속도가 줄지 않습니다.', en:"You press the brakes but the car won't stop. Speed is not reducing." },
+    checks:{ ko:['핸드브레이크가 작동하는가?','기어 다운이 가능한가?','주변 지형은 어떤가?'], en:['Does the handbrake work?','Can you downshift?','What is the surrounding terrain?'] },
+    actions:{ ko:['당황하지 말고 핸들을 잡고 직진하세요.','기어를 낮은 단계로 내려 엔진브레이크를 사용하세요.','핸드브레이크를 천천히 당기세요.','안전한 장벽이나 가드레일로 천천히 유도하세요.'], en:['Stay calm and keep the wheel straight.','Downshift to use engine braking.','Pull the handbrake slowly.','Guide the car toward a safe barrier or guardrail.'] },
+    redflags:{ ko:['브레이크 페달이 바닥까지 밟힌다','핸드브레이크도 작동하지 않는다','고속도로 고속 주행 중이다'], en:['Brake pedal goes to the floor','Handbrake also not working','Currently at highway speed'] },
+    didyouknow:{ ko:'브레이크 오일이 부족하면 브레이크가 갑자기 작동하지 않을 수 있습니다.', en:'Low brake fluid can cause sudden brake failure. Regular vehicle inspection is important.' },
+    timeNote:{ ko:'엔진브레이크를 먼저 사용하세요.', en:'Use engine braking first.' }
+  },
+  { id:'027', part:'drive', emoji:'💨', image:null,
+    title:{ ko:'타이어 파손', en:'Tire Blowout' },
+    scenario:{ ko:'고속 주행 중 갑자기 "쾅" 하는 소리와 함께 차가 한쪽으로 쏠립니다.', en:'At high speed, a loud bang and the car pulls sharply to one side.' },
+    checks:{ ko:['앞 타이어인가 뒷 타이어인가?','차가 어느 쪽으로 쏠리는가?','속도를 줄일 수 있는가?'], en:['Front or rear tire?','Which direction is the car pulling?','Can you reduce speed?'] },
+    actions:{ ko:['핸들을 꽉 잡고 직진을 유지하세요.','브레이크를 급하게 밟지 마세요. 서서히 속도를 줄이세요.','비상등을 켜고 천천히 갓길로 이동하세요.','완전히 멈춘 후 차에서 내려 안전한 곳으로 이동하세요.'], en:['Hold the wheel firmly and maintain straight direction.','Do not brake suddenly. Reduce speed gradually.','Turn on hazard lights and move slowly to the shoulder.','After stopping, exit and move to safety.'] },
+    redflags:{ ko:['차가 통제 불능 상태다','고속에서 갑자기 핸들이 꺾인다'], en:['Car is out of control','Steering suddenly pulled at high speed'] },
+    didyouknow:{ ko:'앞 타이어 파손이 뒷 타이어보다 훨씬 더 위험합니다.', en:'Front tire blowouts are much more dangerous than rear.' },
+    timeNote:{ ko:'급브레이크는 절대 금지입니다.', en:'Sudden braking is absolutely forbidden.' }
+  },
+  { id:'028', part:'drive', emoji:'🌊', image:null,
+    title:{ ko:'폭우·와디 침수', en:'Flash Flood / Wadi' },
+    scenario:{ ko:'갑작스러운 폭우로 도로가 침수되기 시작하거나 와디를 건너야 하는 상황입니다.', en:'Sudden heavy rain is flooding the road, or you need to cross a wadi.' },
+    checks:{ ko:['수위가 얼마나 되는가?','물이 계속 불어나고 있는가?','우회 경로가 있는가?'], en:['How deep is the water?','Is the water level rising?','Is there an alternative route?'] },
+    actions:{ ko:['절대 침수된 도로나 와디를 건너지 마세요.','차를 안전한 높은 곳으로 이동하세요.','수위가 빠르게 오르면 즉시 차에서 나와 높은 곳으로 이동하세요.','800-7999에 신고하고 현재 위치를 알려주세요.'], en:['Never cross flooded roads or wadis.','Move car to safe high ground.','If water rises quickly, exit and move to high ground.','Call 800-7999 and report your location.'] },
+    redflags:{ ko:['차가 움직이기 시작한다','물이 차 안으로 들어온다','수위가 빠르게 상승한다'], en:['Car starts moving (swept by water)','Water entering the car','Water level rising rapidly'] },
+    didyouknow:{ ko:'UAE에서는 갑작스러운 와디 홍수가 매년 발생합니다. 30cm 이상의 유수는 차량을 쓸어갈 수 있습니다.', en:'Flash wadi flooding occurs every year in UAE. Just 30cm of moving water can sweep away a vehicle.' },
+    timeNote:{ ko:'절대 침수 도로를 건너지 마세요.', en:'Never cross flooded roads. Ever.' }
+  },
+  { id:'029', part:'drive', emoji:'🔧', image:null,
+    title:{ ko:'차량 고장', en:'Vehicle Breakdown' },
+    scenario:{ ko:'사막 도로 한가운데서 차가 갑자기 멈췄습니다. 주변에 아무도 없습니다.', en:'Your car suddenly stops in the middle of a desert road. No one around.' },
+    checks:{ ko:['연료가 있는가?','배터리 상태는 어떤가?','현재 위치를 파악하고 있는가?'], en:['Is there fuel?','What is the battery status?','Do you know your current location?'] },
+    actions:{ ko:['갓길로 차를 이동하고 비상등을 켜세요.','삼각대가 있다면 차 뒤 100m에 설치하세요.','차 안에 있으세요. 사막에서 혼자 걷는 것은 위험합니다.','800-7999 또는 도로순찰대에 신고하세요.'], en:['Move to shoulder and turn on hazard lights.','Set up triangle reflector 100m behind if available.','Stay in the car. Walking alone in the desert is dangerous.','Call 800-7999 or road patrol.'] },
+    redflags:{ ko:['폰 배터리가 없다','신호가 없다','극심한 더위'], en:['Phone battery dead','No signal','Extreme heat'] },
+    didyouknow:{ ko:'UAE 사막에서 여름에 차가 고장나면 열사병까지 걸리는 데 30분이 채 걸리지 않을 수 있습니다.', en:'In UAE desert summer heat, heat stroke can set in within 30 minutes of a breakdown.' },
+    timeNote:{ ko:'차 안에 머무르고 즉시 신고하세요.', en:'Stay in the car and call immediately.' }
+  },
+  { id:'030', part:'drive', emoji:'☀️', image:null,
+    title:{ ko:'차량 안 열사병', en:'Heat Stroke in Vehicle' },
+    scenario:{ ko:'주차된 차 안에 있거나 에어컨이 고장난 상태에서 극심한 더위와 어지러움이 옵니다.', en:'Inside a parked car or with broken AC, extreme heat and dizziness hit.' },
+    checks:{ ko:['땀이 나지 않는가? (열사병 신호)','체온이 매우 높게 느껴지는가?','의식이 흐려지는가?'], en:['Not sweating? (heat stroke sign)','Does body temp feel very high?','Altered consciousness?'] },
+    actions:{ ko:['즉시 차에서 나와 그늘로 이동하세요.','옷을 느슨하게 하고 목, 겨드랑이를 냉각하세요.','차가운 물을 마시되 급하게 마시지 마세요.','즉시 800-7999에 신고하세요.'], en:['Exit the car immediately and move to shade.','Loosen clothing and cool neck and armpits.','Drink cool water but not too fast.','Call 800-7999 immediately.'] },
+    redflags:{ ko:['땀이 전혀 나지 않는다','피부가 뜨겁고 붉다','의식이 흐려진다','구토가 동반된다'], en:['Completely no sweating','Skin hot and red','Altered consciousness','Vomiting present'] },
+    didyouknow:{ ko:'UAE 여름 주차 차량 내부 온도는 70~80도까지 올라갈 수 있습니다. 단 10분만 있어도 매우 위험합니다.', en:'Parked car interiors in UAE summer can reach 70-80°C. Even 10 minutes can be very dangerous.' },
+    timeNote:{ ko:'열사병은 즉각적인 냉각과 신고가 필요합니다.', en:'Heat stroke requires immediate cooling and reporting.' }
+  },
+  { id:'031', part:'drive', emergencyNumber:'999', emoji:'🏌️', image:null,
+    title:{ ko:'골프·운동 중 열사병', en:'Heat Stroke During Golf / Exercise' },
+    scenario:{ ko:'야외에서 골프를 치거나 운동하던 중 심한 어지러움, 두통, 메스꺼움이 오고 몸이 뜨겁게 느껴집니다.', en:'During golf or outdoor exercise, severe dizziness, headache, nausea, and intense body heat begin.' },
+    checks:{ ko:['땀이 갑자기 줄거나 나지 않는가?','말이 어눌하거나 혼란스러운가?','체온이 매우 높게 느껴지는가?'], en:['Has sweating suddenly decreased or stopped?','Is speech slurred or is the person confused?','Does body temperature feel very high?'] },
+    actions:{ ko:['즉시 운동을 중단하고 그늘이나 실내로 이동하세요.','옷을 느슨하게 하고 목, 겨드랑이, 사타구니를 차갑게 식히세요.','의식이 명확하고 삼킬 수 있으면 물이나 전해질 음료를 조금씩 마시게 하세요.','의식이 흐리거나 쓰러지면 즉시 999에 신고하세요.'], en:['Stop activity immediately and move to shade or indoors.','Loosen clothing and cool the neck, armpits, and groin.','If fully alert and able to swallow, sip water or electrolyte drink.','If confused or collapsed, call 999 immediately.'] },
+    redflags:{ ko:['의식이 흐려진다','땀이 나지 않고 피부가 뜨겁다','쓰러지거나 경련이 있다','구토가 반복된다'], en:['Altered consciousness','Hot skin with little or no sweating','Collapse or seizure','Repeated vomiting'] },
+    didyouknow:{ ko:'열사병은 단순 탈수가 아니라 생명을 위협하는 응급상황입니다. UAE의 야외 운동에서는 빠르게 악화될 수 있습니다.', en:'Heat stroke is not simple dehydration. It is life-threatening and can worsen quickly during outdoor activity in the UAE.' },
+    timeNote:{ ko:'의식 변화가 있으면 기다리지 말고 즉시 신고하세요.', en:'If mental status changes, do not wait. Call immediately.' }
+  },
+  { id:'032', part:'drive', emoji:'🐝', image:null,
+    title:{ ko:'운전 중 벌 쏘임', en:'Bee Sting While Driving' },
+    scenario:{ ko:'운전 중 차 안으로 들어온 벌에 쏘였습니다. 통증과 함께 알레르기가 걱정됩니다.', en:'A bee got into the car and stung you while driving. Pain and allergy concern.' },
+    checks:{ ko:['알레르기 병력이 있는가?','호흡 곤란이 시작되는가?','안전하게 차를 세울 수 있는가?'], en:['Any allergy history?','Is breathing difficulty starting?','Can you stop safely?'] },
+    actions:{ ko:['당황하지 말고 즉시 안전한 곳에 차를 세우세요.','벌이 차 안에 있다면 창문을 열어 내보내세요.','쏘인 부위를 확인하고 벌침을 카드로 제거하세요.','알레르기 증상이 나타나면 즉시 800-7999에 신고하세요.'], en:['Stay calm and pull over immediately.','If bee is still in car, open windows.','Check sting site and remove stinger with a card.','If allergy symptoms appear, call 800-7999 immediately.'] },
+    redflags:{ ko:['호흡 곤란이 시작된다','목이 조여드는 느낌','전신 두드러기가 생긴다'], en:['Breathing difficulty starting','Throat tightening','Whole-body hives appearing'] },
+    didyouknow:{ ko:'알레르기 병력이 있는 경우 에피펜을 항상 차량 내 쉽게 꺼낼 수 있는 곳에 보관하세요.', en:'If you have allergy history, always keep EpiPen in an easily accessible location in the car.' },
+    timeNote:{ ko:'알레르기 반응은 수분 내에 심각해질 수 있습니다.', en:'Allergic reactions can become severe within minutes.' }
+  },
+  { id:'033', part:'drive', emergencyNumber:'999', emoji:'🍺', image:null,
+    title:{ ko:'급성 알코올 중독', en:'Acute Alcohol Intoxication' },
+    scenario:{ ko:'회식이나 모임 후 술을 많이 마신 사람이 깨워도 반응이 둔하고 반복해서 구토합니다.', en:'After drinking heavily, the person is hard to wake and vomits repeatedly.' },
+    checks:{ ko:['깨워도 눈을 뜨거나 대답하는가?','호흡이 느리거나 불규칙한가?','구토물이 목에 걸릴 위험이 있는가?'], en:['Can they wake up and answer?','Is breathing slow or irregular?','Could vomit block the airway?'] },
+    actions:{ ko:['혼자 재우지 말고 계속 관찰하세요.','토할 수 있으므로 옆으로 눕혀 기도를 보호하세요.','억지로 물, 커피, 음식을 먹이지 마세요.','반응이 둔하거나 호흡이 이상하면 즉시 999에 신고하세요.'], en:['Do not leave them alone to sleep. Keep watching.','Place them on their side to protect the airway from vomit.','Do not force water, coffee, or food.','If hard to wake or breathing is abnormal, call 999 immediately.'] },
+    redflags:{ ko:['깨워도 반응이 거의 없다','호흡이 느리거나 멈칫거린다','입술이나 얼굴이 파래진다','구토를 반복한다'], en:['Barely responds when woken','Slow or irregular breathing','Blue lips or face','Repeated vomiting'] },
+    didyouknow:{ ko:'술에 취해 잠든 것처럼 보여도 호흡 억제나 질식이 생길 수 있습니다. 혼자 두는 것이 가장 위험합니다.', en:'Someone may look asleep, but alcohol can suppress breathing or cause choking. Leaving them alone is the greatest danger.' },
+    timeNote:{ ko:'반응 저하와 호흡 이상은 즉시 신고해야 합니다.', en:'Reduced response and abnormal breathing require an immediate call.' }
+  },
+  { id:'034', part:'drive', emoji:'🌙', image:null,
+    title:{ ko:'야간 사막 고립', en:'Stranded in Desert at Night' },
+    scenario:{ ko:'야간 사막 도로에서 차가 고장났습니다. 주변에 아무것도 없고 기온이 급격히 떨어집니다.', en:'Car broke down on a desert road at night. Nothing around and temperature dropping fast.' },
+    checks:{ ko:['폰 신호가 잡히는가?','차 안에 있을 수 있는가?','기온이 얼마나 떨어지고 있는가?'], en:['Is there phone signal?','Can you stay in the car?','How fast is temperature dropping?'] },
+    actions:{ ko:['차 안에 머무르세요. 차량이 가장 안전한 대피처입니다.','비상등을 켜고 주기적으로 경적을 울리세요.','800-7999에 신고하고 GPS 좌표를 공유하세요.','따뜻하게 유지하고 수분을 섭취하세요.'], en:['Stay in the car. It is your safest shelter.','Turn on hazard lights and honk periodically.','Call 800-7999 and share GPS coordinates.','Stay warm and stay hydrated.'] },
+    redflags:{ ko:['폰 배터리가 없다','신호가 전혀 잡히지 않는다','저체온증 증상이 시작된다'], en:['Phone battery dead','Absolutely no signal','Hypothermia symptoms starting (severe shaking)'] },
+    didyouknow:{ ko:'UAE 사막은 밤에 기온이 20도 이상 떨어질 수 있습니다. 여름에도 사막 야간 기온은 위험할 수 있습니다.', en:'UAE desert temperatures can drop 20°C or more at night. Even summer desert nights can be dangerous.' },
+    timeNote:{ ko:'차를 떠나지 마세요. 차 안이 제일 안전합니다.', en:'Do not leave the car. The car is the safest place.' }
+  }
+];
+
+// ══ QUIZ ══
+function getEmergencyNumber(card) {
+  return card ? (card.emergencyNumber || (card.part === 'drive' ? '999' : '800-7999')) : '800-7999';
+}
+
+function getEmergencyLabel(card) {
+  return getEmergencyNumber(card) === '999' ? 'Emergency' : 'BNPP Emergency';
+}
+
+function getSortedCards(cards) {
+  return cards.slice().sort((a, b) => Number(a.id) - Number(b.id));
+}
+
+function getCardDisplayId(card) {
+  const index = getSortedCards(CARDS).findIndex(c => c === card);
+  return String(index + 1).padStart(3, '0');
+}
+
+function formatEmergencyText(text, card) {
+  return String(text).replace(/800-7999/g, getEmergencyNumber(card));
+}
+
+function updateCardCounts() {
+  const total = CARDS.length;
+  const home = CARDS.filter(c => c.part === 'home').length;
+  const drive = CARDS.filter(c => c.part === 'drive').length;
+  document.getElementById('cards-count').textContent = total;
+  document.getElementById('tab-all').textContent = (currentLang === 'en' ? 'All ' : '전체 ') + total;
+  document.getElementById('tab-home').textContent = '🏠 BNPP ' + home;
+  document.getElementById('tab-drive').textContent = '🚗 Outside ' + drive;
+}
+
+function getWeeklyMissionCard() {
+  const sorted = getSortedCards(CARDS);
+  const base = new Date(2026, 0, 5);
+  const today = new Date();
+  const week = Math.floor((today - base) / (7 * 24 * 60 * 60 * 1000));
+  return sorted[((week % sorted.length) + sorted.length) % sorted.length];
+}
+
+function updateWeeklyMission() {
+  const card = getWeeklyMissionCard();
+  if (!card) return;
+  const L = currentLang || 'ko';
+  const idx = CARDS.indexOf(card);
+  document.getElementById('mission-num').textContent = '#' + getCardDisplayId(card);
+  document.getElementById('mission-emoji').textContent = card.emoji;
+  document.getElementById('mission-title').textContent = card.title[L] || card.title.ko;
+  document.getElementById('mission-desc').textContent = formatEmergencyText(card.scenario[L] || card.scenario.ko, card);
+  document.getElementById('mission-btn').onclick = function() { goCard(idx); };
+}
+
+const LEGACY_QUIZ_QUESTIONS = [
+  {
+    cardIndex: 0,
+    scenario: { ko:'혼자 숙소에서 과일을 먹다 갑자기 숨이 완전히 막혔습니다. 기침이 전혀 안 됩니다.', en:"You're alone eating fruit when you suddenly can't breathe at all. You cannot cough." },
+    question: { ko:'지금 당신이 해야 할 첫 번째 행동은?', en:'What is your first action right now?' },
+    options: { ko:['물을 마셔서 넘기려고 한다','주먹을 배꼽과 명치 사이에 대고 위로 강하게 밀어 올린다','누워서 등을 바닥에 두드린다','5분 기다리다가 안 되면 전화한다'], en:['Try to drink water','Place fist between navel and breastbone and thrust upward','Lie down and tap back on floor','Wait 5 minutes before calling'] },
+    correct: 1,
+    explanation: { ko:'완전 기도 폐쇄 시 물을 마시거나 누우면 오히려 위험합니다. 즉시 하임리히 자가시행이 필요합니다.', en:'Drinking water or lying down makes complete airway obstruction worse. Immediate self-Heimlich is required.' }
+  },
+  {
+    cardIndex: 5,
+    scenario: { ko:'휴식 중 갑자기 가슴 가운데가 쥐어짜듯 아프고 왼쪽 팔이 묵직합니다. 식은땀도 납니다.', en:'While resting, squeezing chest pain and heavy left arm. Cold sweat.' },
+    question: { ko:'지금 즉시 800-7999에 전화해야 할까요?', en:'Should you call 800-7999 right now?' },
+    options: { ko:['아니다, 30분 후에도 안 되면 전화한다','그렇다, 지금 즉시 전화해야 한다','소화제를 먹어본다','흔한 일이라 지켜본다'], en:['No, wait 30 minutes first','Yes, call immediately right now','Take antacids first',"It's probably nothing, just wait"] },
+    correct: 1,
+    explanation: { ko:'가슴 쥐어짜는 통증 + 왼팔 묵직함 + 식은땀은 심장마비의 3대 증상입니다. 즉시 전화하세요. 골든타임은 90분입니다.', en:'Squeezing chest pain + heavy left arm + sweating are three classic heart attack signs. Call immediately. Golden window is 90 minutes.' }
+  },
+  {
+    cardIndex: 16,
+    scenario: { ko:'고속도로 운전 중 갑자기 가슴이 조여드는 느낌이 왔습니다.', en:'Sudden chest tightening while driving on the highway.' },
+    question: { ko:'가장 먼저 해야 할 행동은?', en:'What is the very first thing you should do?' },
+    options: { ko:['병원까지 최대한 빨리 달린다','비상등을 켜고 즉시 갓길에 세운다','조수석 사람에게 알리고 계속 운전한다','속도를 줄이면서 다음 인터체인지까지 간다'], en:['Drive to hospital as fast as possible','Turn on hazard lights and pull over immediately','Tell the passenger and keep driving','Slow down and go to next interchange'] },
+    correct: 1,
+    explanation: { ko:'운전 중 흉통은 즉시 멈추는 것이 유일한 정답입니다.', en:'When chest pain hits while driving, stopping immediately is the only right answer.' }
+  }
+];
+
+// ══ STATE ══
+let currentScreen = 'home';
+let currentFilter = 'all';
+let currentQuizIndex = 0;
+let quizScore = 0;
+let answered = false;
+let currentQuizCard = 0;
+let activeQuizQuestions = [];
+let prevScreen = 'home';
+let currentCardData = null;
+
+// ══ NAV ══
+function goScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  currentScreen = name;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const map = { home:'nav-home', cards:'nav-cards' };
+  if (map[name]) document.getElementById(map[name]).classList.add('active');
+  if (name === 'cards') renderCardsList(currentFilter);
+  window.scrollTo(0, 0);
+}
+
+function makeQuizOptions(correct, wrongs, seed) {
+  const options = wrongs.slice(0, 3);
+  const index = seed % 4;
+  options.splice(index, 0, correct);
+  return { options, correct: index };
+}
+
+function buildCardQuiz(card) {
+  const Ls = ['ko', 'en'];
+  const cardIndex = CARDS.indexOf(card);
+  const quiz = [];
+
+  const firstAction = {};
+  const scenario = {};
+  const actionQuestion = {};
+  const actionOptions = {};
+  const actionExplanation = {};
+  Ls.forEach(L => {
+    const actions = (card.actions[L] || card.actions.ko).map(a => formatEmergencyText(a, card));
+    const wrongs = L === 'en'
+      ? ['Wait and see if it passes.', 'Ignore it and continue as normal.', 'Drink quickly and keep moving.']
+      : ['잠시 기다리며 지켜본다.', '괜찮다고 생각하고 하던 일을 계속한다.', '물을 급하게 마시고 계속 움직인다.'];
+    const made = makeQuizOptions(actions[0], wrongs, Number(card.id));
+    firstAction[L] = actions[0];
+    scenario[L] = formatEmergencyText(card.scenario[L] || card.scenario.ko, card);
+    actionQuestion[L] = L === 'en' ? 'What should you do first?' : '가장 먼저 해야 할 행동은?';
+    actionOptions[L] = made.options;
+    actionExplanation[L] = actions[0];
+  });
+  quiz.push({
+    cardIndex,
+    scenario,
+    question: actionQuestion,
+    options: actionOptions,
+    correct: Number(card.id) % 4,
+    explanation: actionExplanation
+  });
+
+  const redflagQuestion = {};
+  const redflagOptions = {};
+  const redflagExplanation = {};
+  Ls.forEach(L => {
+    const redflags = (card.redflags[L] || card.redflags.ko).map(r => formatEmergencyText(r, card));
+    const wrongs = L === 'en'
+      ? ['Symptoms are clearly improving.', 'The person can speak normally.', 'There is only mild worry without worsening.']
+      : ['증상이 뚜렷하게 좋아진다.', '평소처럼 말하고 반응한다.', '악화 없이 가벼운 걱정만 있다.'];
+    const made = makeQuizOptions(redflags[0], wrongs, (Number(card.id) + 1));
+    redflagQuestion[L] = L === 'en' ? 'Which sign means you should act urgently?' : '어떤 신호가 즉시 대응해야 하는 위험 신호인가요?';
+    redflagOptions[L] = made.options;
+    redflagExplanation[L] = formatEmergencyText(card.timeNote[L] || card.timeNote.ko, card);
+  });
+  quiz.push({
+    cardIndex,
+    scenario,
+    question: redflagQuestion,
+    options: redflagOptions,
+    correct: (Number(card.id) + 1) % 4,
+    explanation: redflagExplanation
+  });
+
+  return quiz;
+}
+
+function startCardQuiz(id) {
+  const card = CARDS.find(c => c.id === id) || currentCardData;
+  if (!card) return;
+  currentCardData = card;
+  activeQuizQuestions = buildCardQuiz(card);
+  goQuiz(card);
+}
+
+function goQuiz(card) {
+  if (card && !activeQuizQuestions.length) activeQuizQuestions = buildCardQuiz(card);
+  if (!activeQuizQuestions.length && currentCardData) activeQuizQuestions = buildCardQuiz(currentCardData);
+  if (!activeQuizQuestions.length) activeQuizQuestions = buildCardQuiz(CARDS[0]);
+  currentQuizIndex = 0;
+  quizScore = 0;
+  answered = false;
+  goScreen('quiz');
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('quiz-options').style.display = 'flex';
+  document.getElementById('feedback-box').classList.remove('show');
+  setTimeout(function(){ renderQuestion(); }, 30);
+}
+
+function goCard(index) {
+  prevScreen = currentScreen;
+  const card = CARDS[index];
+  if (!card) { showToast(t('comingSoon')); return; }
+  currentCardData = card;
+  renderCardDetail(card);
+  goScreen('card-detail');
+  document.getElementById('detail-back').onclick = function() {
+    goScreen(prevScreen === 'card-detail' ? 'cards' : prevScreen);
+  };
+}
+
+function goCardById(id) {
+  const idx = CARDS.findIndex(c => c.id === id);
+  if (idx >= 0) goCard(idx);
+  else showToast(t('comingSoon'));
+}
+
+// ══ QUIZ ══
+function renderQuestion() {
+  const q = activeQuizQuestions[currentQuizIndex];
+  if (!q) { showResult(); return; }
+  currentQuizCard = q.cardIndex;
+  answered = false;
+  const L = currentLang || 'ko';
+  const pct = (currentQuizIndex / activeQuizQuestions.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('quiz-scenario').textContent = q.scenario[L] || q.scenario.ko;
+  document.getElementById('quiz-question').textContent = q.question[L] || q.question.ko;
+  document.getElementById('feedback-box').classList.remove('show');
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('quiz-options').style.display = 'flex';
+  const opts = q.options[L] || q.options.ko;
+  document.getElementById('quiz-options').innerHTML = opts.map((o, i) => `
+    <button class="quiz-option" onclick="selectAnswer(${i})">
+      <div class="option-letter">${'ABCD'[i]}</div>
+      <div>${o}</div>
+    </button>`).join('');
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const q = activeQuizQuestions[currentQuizIndex];
+  const L = currentLang || 'ko';
+  document.querySelectorAll('.quiz-option').forEach((o, idx) => {
+    o.classList.add('disabled');
+    if (idx === q.correct) o.classList.add('correct');
+    else if (idx === i && i !== q.correct) o.classList.add('wrong');
+  });
+  if (i === q.correct) quizScore++;
+  const correct = i === q.correct;
+  document.getElementById('feedback-title').textContent = correct ? t('correctFb') : t('wrongFb');
+  document.getElementById('feedback-title').style.color = correct ? 'var(--green)' : 'var(--red)';
+  document.getElementById('feedback-text').textContent = q.explanation[L] || q.explanation.ko;
+  const isLast = currentQuizIndex === activeQuizQuestions.length - 1;
+  document.getElementById('next-btn').textContent = isLast ? (L === 'ko' ? '결과 보기 →' : 'See Results →') : (t('next') + ' →');
+  document.getElementById('feedback-box').classList.add('show');
+}
+
+function nextQuestion() {
+  currentQuizIndex++;
+  if (currentQuizIndex >= activeQuizQuestions.length) { showResult(); return; }
+  renderQuestion();
+}
+
+function showResult() {
+  document.getElementById('quiz-options').style.display = 'none';
+  document.getElementById('feedback-box').classList.remove('show');
+  document.getElementById('progress-fill').style.width = '100%';
+  const pct = Math.round((quizScore / activeQuizQuestions.length) * 100);
+  document.getElementById('result-score').textContent = quizScore + '/' + activeQuizQuestions.length;
+  document.getElementById('result-score').style.color = pct >= 70 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('result-message').textContent = pct === 100 ? t('score100') : pct >= 70 ? t('score70') : t('score0');
+  document.getElementById('quiz-result').classList.add('show');
+}
+
+function restartQuiz() {
+  currentQuizIndex = 0; quizScore = 0;
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('quiz-options').style.display = 'flex';
+  renderQuestion();
+}
+
+// ══ CARDS LIST ══
+function renderCardsList(filter) {
+  currentFilter = filter;
+  const filtered = getSortedCards(filter === 'all' ? CARDS : CARDS.filter(c => c.part === filter));
+  document.getElementById('cards-list').innerHTML = filtered.map(c => `
+    <div class="card-row" onclick="goCard(${CARDS.indexOf(c)})">
+      <div class="card-row-emoji">${c.emoji}</div>
+      <div class="card-row-info">
+        <div class="card-row-num">#${getCardDisplayId(c)} · ${c.part === 'home' ? 'BNPP' : 'OUTSIDE'}</div>
+        <div class="card-row-title">${c.title[currentLang] || c.title.ko}</div>
+      </div>
+      <div class="card-row-arrow">›</div>
+    </div>`).join('');
+}
+
+function filterCards(type, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderCardsList(type);
+}
+
+// ══ CARD DETAIL ══
+function renderCardDetail(card) {
+  document.getElementById('detail-emoji').textContent = card.emoji;
+  document.getElementById('detail-num').textContent = '#' + getCardDisplayId(card) + ' · ' + (card.part === 'home' ? 'BNPP' : 'OUTSIDE');
+  document.getElementById('detail-title').textContent = card.title[currentLang] || card.title.ko;
+  const L = currentLang || 'ko';
+  const emergencyNumber = getEmergencyNumber(card);
+  const emergencyLabel = getEmergencyLabel(card);
+  const imgHtml = card.image
+    ? '<img src="' + card.image + '" style="width:100%;border-radius:8px;margin-bottom:10px;" alt=""/>'
+    : '<div class="scenario-img">' + card.emoji + '<div class="img-placeholder-label">IMAGE</div></div>';
+  document.getElementById('detail-body').innerHTML = `
+    <div class="ds ds-scenario">
+      <div class="ds-header"><span class="ds-icon">📖</span><span class="ds-label">${t('scenario')}</span></div>
+      <div class="ds-body">${imgHtml}${formatEmergencyText(card.scenario[L] || card.scenario.ko, card)}</div>
+    </div>
+    <div class="ds ds-check">
+      <div class="ds-header"><span class="ds-icon">👀</span><span class="ds-label">${t('check')}</span></div>
+      <div class="ds-body">${(card.checks[L] || card.checks.ko).map((c,i) => '<div class="check-item"><div class="check-icon">'+(i+1)+'</div><div>'+formatEmergencyText(c, card)+'</div></div>').join('')}</div>
+    </div>
+    <div class="ds ds-action">
+      <div class="ds-header"><span class="ds-icon">✅</span><span class="ds-label">${t('action')}</span></div>
+      <div class="ds-body">${(card.actions[L] || card.actions.ko).map((a,i) => '<div class="action-step"><div class="step-num">'+(i+1)+'</div><div>'+formatEmergencyText(a, card)+'</div></div>').join('')}</div>
+    </div>
+    <div class="ds ds-redflag">
+      <div class="ds-header"><span class="ds-icon" style="color:white">🚨</span><span class="ds-label">${t('redflag')}</span></div>
+      <div class="ds-body">${(card.redflags[L] || card.redflags.ko).map(r => '<div class="rf-item"><div class="rf-bullet"></div><div>'+formatEmergencyText(r, card)+'</div></div>').join('')}</div>
+    </div>
+    <div class="call-strip" onclick="callEmergency()">
+      <div><div class="call-label-text">${emergencyLabel}</div><div class="call-number">${emergencyNumber}</div></div>
+      <div class="call-icon-big">📞</div>
+    </div>
+    <div class="time-matters-box">⏳ ${formatEmergencyText(card.timeNote[L] || card.timeNote.ko, card)}</div>
+    <div class="ds ds-did">
+      <div class="ds-header"><span class="ds-icon">💡</span><span class="ds-label">${t('didyouknow')}</span></div>
+      <div class="ds-body">${formatEmergencyText(card.didyouknow[L] || card.didyouknow.ko, card)}</div>
+    </div>
+    <button class="share-btn" onclick="startCardQuiz('${card.id}')">
+      ${t('quizBtn')}
+    </button>
+    <button class="share-btn" onclick="openShareModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      ${t('shareBtn')}
+    </button>
+    <div class="disclaimer">⚠️ ${formatEmergencyText(t('disclaimer'), card)}</div>
+  `;
+}
+
+// ══ SHARE ══
+function openShareModal() {
+  if (!currentCardData) return;
+  const card = currentCardData;
+  const L = currentLang || 'ko';
+  const emergencyNumber = getEmergencyNumber(card);
+  const emergencyLabel = getEmergencyLabel(card);
+  document.getElementById('share-card-preview').innerHTML = `
+    <div class="sc-header"><span class="sc-brand">BNPP Survival</span><span class="sc-num">#${getCardDisplayId(card)}</span></div>
+    <div class="sc-hero"><div class="sc-emoji">${card.emoji}</div><div class="sc-title-text">${card.title[L] || card.title.ko}</div></div>
+    <div class="sc-section">
+      <div class="sc-section-label" style="color:var(--green)">✅ ${t('action')}</div>
+      ${(card.actions[L] || card.actions.ko).map((a,i) => '<div class="sc-action-item"><div class="sc-step-num">'+(i+1)+'</div><div>'+formatEmergencyText(a, card)+'</div></div>').join('')}
+    </div>
+    <div class="sc-section sc-redflag-bg">
+      <div class="sc-section-label sc-redflag-label">🚨 RED FLAG</div>
+      ${(card.redflags[L] || card.redflags.ko).map(r => '<div class="sc-rf-item"><div class="sc-rf-dot"></div><div>'+formatEmergencyText(r, card)+'</div></div>').join('')}
+    </div>
+    <div class="sc-call">
+      <div><div class="sc-call-label">${emergencyLabel}</div><div class="sc-call-num">${emergencyNumber}</div></div>
+      <span style="font-size:24px">📞</span>
+    </div>
+    <div class="sc-footer">⚠️ For awareness only · Not medical advice</div>
+  `;
+  document.getElementById('share-modal').classList.add('show');
+}
+
+function closeShareModal() { document.getElementById('share-modal').classList.remove('show'); }
+function closeModal(e) { if (e.target === document.getElementById('share-modal')) closeShareModal(); }
+
+async function downloadCard() {
+  showToast(t('saving'));
+  const el = document.getElementById('share-card-preview');
+  try {
+    const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+    const dataUrl = canvas.toDataURL('image/png');
+    const blob = await (await fetch(dataUrl)).blob();
+    const file = new File([blob], 'bnpp-survival-card.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: 'BNPP Survival Card' });
+    } else {
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'bnpp-survival-' + currentCardData.id + '.png';
+      a.click();
+    }
+    closeShareModal();
+  } catch(e) {
+    showToast(currentLang === 'en' ? 'Image sharing is not supported here.' : '이 환경에서는 이미지 공유가 지원되지 않습니다.');
+  }
+}
+
+function callEmergency(card) {
+  const emergencyCard = card || (currentScreen === 'card-detail' ? currentCardData : null);
+  const emergencyNumber = getEmergencyNumber(emergencyCard);
+  const emergencyLabel = getEmergencyLabel(emergencyCard);
+  const confirmText = currentLang === 'en'
+    ? 'Call ' + emergencyLabel + ' ' + emergencyNumber + '?'
+    : (emergencyLabel === 'BNPP Emergency' ? 'BNPP 긴급번호 ' : '긴급번호 ') + emergencyNumber + '로 전화하시겠습니까?';
+  if (confirm(confirmText)) window.location.href = 'tel:' + emergencyNumber.replace(/\D/g, '');
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// Init
+updateCardCounts();
+updateWeeklyMission();
+renderCardsList('all');
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./service-worker.js');
+  });
+}
+</script>
+
+</body>
+</html>
