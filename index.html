@@ -302,6 +302,14 @@ body {
 .card-thumb:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
 
 .card-thumb-emoji { font-size: 22px; margin-bottom: 6px; }
+.card-thumb-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: block;
+}
 .card-thumb-num { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
 .card-thumb-title { font-size: 12px; font-weight: 700; line-height: 1.35; color: var(--navy); }
 
@@ -572,6 +580,14 @@ body {
 .card-row:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
 
 .card-row-emoji { font-size: 24px; flex-shrink: 0; }
+.card-row-img {
+  width: 82px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: block;
+}
 .card-row-info { flex: 1; }
 .card-row-num { font-size: 10px; color: var(--text-muted); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .card-row-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-top: 1px; }
@@ -1013,25 +1029,25 @@ body {
     <div class="section-eyebrow" data-i18n="recentCards">추천 카드</div>
     <div class="card-grid">
       <div class="card-thumb" onclick="goCard(0)">
-        <div class="card-thumb-emoji">🍅</div>
+        <img class="card-thumb-img" src="images/card001.png" alt="">
         <div class="card-thumb-num">#001 · BNPP</div>
         <div class="card-thumb-title" data-i18n="card001Title2">음식이 목에 걸렸을 때</div>
         <span class="card-thumb-tag tag-home">BNPP</span>
       </div>
       <div class="card-thumb" onclick="goCard(1)">
-        <div class="card-thumb-emoji">😴</div>
+        <img class="card-thumb-img" src="images/card002.png" alt="">
         <div class="card-thumb-num">#002 · BNPP</div>
         <div class="card-thumb-title" data-i18n="card002Title">자다가 숨이 막혀 깼을 때</div>
         <span class="card-thumb-tag tag-home">BNPP</span>
       </div>
       <div class="card-thumb" onclick="goCardById('007')">
-        <div class="card-thumb-emoji">💔</div>
+        <img class="card-thumb-img" src="images/card006.png" alt="">
         <div class="card-thumb-num">#006 · BNPP</div>
         <div class="card-thumb-title" data-i18n="card007Title">갑작스러운 흉통</div>
         <span class="card-thumb-tag tag-home">BNPP</span>
       </div>
       <div class="card-thumb" onclick="goCardById('021')">
-        <div class="card-thumb-emoji">🚗</div>
+        <img class="card-thumb-img" src="images/card017.png" alt="">
         <div class="card-thumb-num">#017 · OUTSIDE</div>
         <div class="card-thumb-title" data-i18n="card021Title">운전 중 흉통</div>
         <span class="card-thumb-tag tag-drive">Outside</span>
@@ -1533,6 +1549,12 @@ function getCardImage(card) {
   return card.image || 'images/card' + getCardDisplayId(card) + '.png';
 }
 
+function setCardImagePaths() {
+  getSortedCards(CARDS).forEach((card, index) => {
+    card.image = 'images/card' + String(index + 1).padStart(3, '0') + '.png';
+  });
+}
+
 function formatEmergencyText(text, card) {
   return String(text).replace(/800-7999/g, getEmergencyNumber(card));
 }
@@ -1792,7 +1814,7 @@ function renderCardsList(filter) {
   const filtered = getSortedCards(filter === 'all' ? CARDS : CARDS.filter(c => c.part === filter));
   document.getElementById('cards-list').innerHTML = filtered.map(c => `
     <div class="card-row" onclick="goCard(${CARDS.indexOf(c)})">
-      <div class="card-row-emoji">${c.emoji}</div>
+      <img class="card-row-img" src="${getCardImage(c)}" alt="">
       <div class="card-row-info">
         <div class="card-row-num">#${getCardDisplayId(c)} · ${c.part === 'home' ? 'BNPP' : 'OUTSIDE'}</div>
         <div class="card-row-title">${c.title[currentLang] || c.title.ko}</div>
@@ -1927,6 +1949,7 @@ function showToast(msg) {
 }
 
 // Init
+setCardImagePaths();
 updateCardCounts();
 updateWeeklyMission();
 renderCardsList('all');
