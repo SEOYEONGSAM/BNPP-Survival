@@ -1499,6 +1499,15 @@ const CARDS = [
     redflags:{ ko:['폰 배터리가 없다','신호가 전혀 잡히지 않는다','저체온증 증상이 시작된다'], en:['Phone battery dead','Absolutely no signal','Hypothermia symptoms starting (severe shaking)'] },
     didyouknow:{ ko:'UAE 사막은 밤에 기온이 20도 이상 떨어질 수 있습니다. 여름에도 사막 야간 기온은 위험할 수 있습니다.', en:'UAE desert temperatures can drop 20°C or more at night. Even summer desert nights can be dangerous.' },
     timeNote:{ ko:'차를 떠나지 마세요. 차 안이 제일 안전합니다.', en:'Do not leave the car. The car is the safest place.' }
+  },
+  { id:'035', part:'drive', emergencyNumber:'999', emoji:'🏜️', image:null,
+    title:{ ko:'모래길에서 차가 미끄러질 때', en:'When the Car Skids on Sand' },
+    scenario:{ ko:'도로 위 모래나 모래길 때문에 차가 갑자기 미끄러지고 핸들이 흔들립니다.', en:'Sand on the road or a sandy track makes the car suddenly skid and the steering feels unstable.' },
+    checks:{ ko:['차가 어느 방향으로 미끄러지는가?','브레이크를 세게 밟고 있지는 않은가?','주변 차량이나 장애물이 가까운가?'], en:['Which direction is the car skidding?','Are you braking hard?','Are nearby vehicles or obstacles close?'] },
+    actions:{ ko:['급브레이크를 밟지 말고 가속 페달에서 발을 떼세요.','핸들을 급하게 꺾지 말고 차가 향하는 방향으로 부드럽게 조향하세요.','속도가 줄면 비상등을 켜고 안전한 곳에 정차하세요.','사고가 났거나 차량이 도로 위에 멈추면 즉시 999에 신고하세요.'], en:['Do not slam the brakes. Take your foot off the accelerator.','Do not jerk the steering wheel. Steer gently in the direction the car is moving.','When speed drops, turn on hazard lights and stop in a safe place.','If a crash happens or the car stops on the road, call 999 immediately.'] },
+    redflags:{ ko:['차가 회전하거나 제어되지 않는다','사고 후 통증이나 어지러움이 있다','차량이 도로 위에 멈춰 있다','연기, 기름 냄새, 다른 차량 접근 위험이 있다'], en:['The car spins or cannot be controlled','Pain or dizziness after the crash','The car is stopped on the road','Smoke, fuel smell, or approaching traffic danger'] },
+    didyouknow:{ ko:'모래 위에서는 급브레이크와 급조향이 미끄러짐을 더 키울 수 있습니다. 부드럽게 속도를 줄이는 것이 가장 중요합니다.', en:'On sand, sudden braking and sharp steering can make the skid worse. Smoothly reducing speed is the priority.' },
+    timeNote:{ ko:'차가 멈춘 뒤에는 주변 차량을 먼저 확인하고 안전한 위치로 이동하세요.', en:'After stopping, check traffic first and move to a safe position.' }
   }
 ];
 
@@ -1518,6 +1527,10 @@ function getSortedCards(cards) {
 function getCardDisplayId(card) {
   const index = getSortedCards(CARDS).findIndex(c => c === card);
   return String(index + 1).padStart(3, '0');
+}
+
+function getCardImage(card) {
+  return card.image || 'images/card' + getCardDisplayId(card) + '.png';
 }
 
 function formatEmergencyText(text, card) {
@@ -1802,9 +1815,7 @@ function renderCardDetail(card) {
   const L = currentLang || 'ko';
   const emergencyNumber = getEmergencyNumber(card);
   const emergencyLabel = getEmergencyLabel(card);
-  const imgHtml = card.image
-    ? '<img src="' + card.image + '" style="width:100%;border-radius:8px;margin-bottom:10px;" alt=""/>'
-    : '<div class="scenario-img">' + card.emoji + '<div class="img-placeholder-label">IMAGE</div></div>';
+  const imgHtml = '<img src="' + getCardImage(card) + '" style="width:100%;border-radius:8px;margin-bottom:10px;" alt=""/>';
   document.getElementById('detail-body').innerHTML = `
     <div class="ds ds-scenario">
       <div class="ds-header"><span class="ds-icon">📖</span><span class="ds-label">${t('scenario')}</span></div>
@@ -1851,7 +1862,7 @@ function openShareModal() {
   const emergencyLabel = getEmergencyLabel(card);
   document.getElementById('share-card-preview').innerHTML = `
     <div class="sc-header"><span class="sc-brand">BNPP Survival</span><span class="sc-num">#${getCardDisplayId(card)}</span></div>
-    <div class="sc-hero"><div class="sc-emoji">${card.emoji}</div><div class="sc-title-text">${card.title[L] || card.title.ko}</div></div>
+    <div class="sc-hero"><img src="${getCardImage(card)}" style="width:72px;height:48px;object-fit:cover;border-radius:8px;flex-shrink:0;" alt=""/><div class="sc-title-text">${card.title[L] || card.title.ko}</div></div>
     <div class="sc-section">
       <div class="sc-section-label">SCENARIO</div>
       <div class="sc-scenario-text">${formatEmergencyText(card.scenario[L] || card.scenario.ko, card)}</div>
